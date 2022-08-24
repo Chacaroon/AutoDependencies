@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="FirstService.cs" />
+    <Compile Include="FirstService.g.cs" />
+    <Compile Include="GeneratedAttribute.g.cs" />
+    <Compile Include="InjectAttribute.g.cs" />
+    <Compile Include="SecondService.cs" />
+    <Compile Include="SecondService.g.cs" />
+    <Compile Include="ServiceAttribute.g.cs" />
+    <Compile Include="ThirdService.cs" />
+    <Compile Include="ThirdService.g.cs" />
+  </ItemGroup>
+</Project>
