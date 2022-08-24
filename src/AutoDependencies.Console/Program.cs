@@ -14,16 +14,12 @@ var generatedServices = new List<(string, SyntaxNode)>();
 foreach (var document in project.Documents)
 {
     var visitor = new ServiceVisitor();
-    var semanticModel = await document.GetSemanticModelAsync();
     visitor.Visit(await document.GetSyntaxRootAsync());
 
+    var semanticModel = await document.GetSemanticModelAsync();
     var services = visitor.ServiceNodes.Select(x => serviceManager.GenerateService(x, semanticModel!));
     generatedServices.AddRange(services);
 }
 
 workspaceManager.AddDocuments(ConsoleConstants.AutoDependenciesServicesProjectName, generatedServices);
-
-namespace AutoDependencies.ConsoleApp
-{
-}
 

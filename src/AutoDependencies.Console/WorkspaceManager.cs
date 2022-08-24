@@ -10,7 +10,7 @@ internal class WorkspaceManager
 {
     private static readonly string SolutionPath = Path.Combine(
         Assembly.GetEntryAssembly()!.Location,
-        "../../../../../AutoDependencies.sln");
+        "../../../../../../AutoDependencies.sln");
 
     private readonly MSBuildWorkspace _workspace;
 
@@ -27,23 +27,21 @@ internal class WorkspaceManager
     {
         await _workspace.OpenSolutionAsync(SolutionPath);
 
-        // Remove generated files
+        Console.WriteLine("Remove generated files");
         RemoveDocuments(ConsoleConstants.AutoDependenciesServicesProjectName, x => x.Name.EndsWith(".g.cs"));
         
+        Console.WriteLine("Generate default attributes");
         var defaultAttributes = DefaultAttributes.GetOrCreateDefaultAttributes(GetProject(projectName).DefaultNamespace!);
-
         AddDocuments(projectName, defaultAttributes);
     }
 
     public void AddDocuments(string projectName, IEnumerable<(string FileName, SyntaxNode Node)> nodes)
     {
-        var solution = GetSolution();
         var project = GetProject(projectName);
 
-        foreach (var (fileName, node) in nodes)
-        {
-            solution = AddDocument(solution, project, fileName, node);
-        }
+        var solution = nodes.Aggregate(
+            GetSolution(),
+            (solution, x) => AddDocument(solution, project, x.FileName, x.Node));
 
         var result = _workspace.TryApplyChanges(solution);
 
