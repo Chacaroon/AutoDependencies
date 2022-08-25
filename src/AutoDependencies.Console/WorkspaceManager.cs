@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Reflection;
-using AutoDependencies.Core;
+using AutoDependencies.Core.Constants;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.MSBuild;
@@ -31,7 +31,7 @@ internal class WorkspaceManager
         RemoveDocuments(ConsoleConstants.AutoDependenciesServicesProjectName, x => x.Name.EndsWith(".g.cs"));
         
         Console.WriteLine("Generate default attributes");
-        var defaultAttributes = DefaultAttributes.GetOrCreateDefaultAttributes(GetProject(projectName).DefaultNamespace!);
+        var defaultAttributes = DefaultAttributes.GetOrCreateDefaultAttributes();
         AddDocuments(projectName, defaultAttributes);
     }
 
@@ -84,7 +84,7 @@ internal class WorkspaceManager
 
         var newSolution = solution.AddDocument(
             DocumentId.CreateNewId(project.Id),
-            fileName,
+            $"Generated/{fileName}",
             node.NormalizeWhitespace(),
             isGenerated: true);
 

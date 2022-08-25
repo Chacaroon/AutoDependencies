@@ -4,8 +4,9 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
+using AutoDependencies.Core.Constants;
 
-namespace AutoDependencies.Core;
+namespace AutoDependencies.Core.Factories;
 internal static class SyntaxNodesFactory
 {
     public static NamespaceDeclarationSyntax CreateNamespace(string namespaceName, IEnumerable<MemberDeclarationSyntax>? members = null)
@@ -16,5 +17,14 @@ internal static class SyntaxNodesFactory
             .WithMembers(SyntaxFactory.List(members ?? Array.Empty<MemberDeclarationSyntax>()));
 
         return namespaceDeclaration;
+    }
+
+    public static SyntaxList<UsingDirectiveSyntax> CreateUsingDirectiveList(string[] namespaces)
+    {
+        var usingDirectives = namespaces
+            .Select(x => SyntaxFactory.UsingDirective(SyntaxFactory.IdentifierName(x)))
+            .ToArray();
+
+        return SyntaxFactory.List(usingDirectives);
     }
 }

@@ -1,37 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using AutoDependencies.Core.Factories;
 using Microsoft.CodeAnalysis;
 
-namespace AutoDependencies.Core;
+namespace AutoDependencies.Core.Constants;
 public static class DefaultAttributes
 {
     private static IEnumerable<(string, SyntaxNode)>? _attributes;
 
-    public static IEnumerable<(string, SyntaxNode)> GetOrCreateDefaultAttributes(string namespaceName)
+    public static IEnumerable<(string, SyntaxNode)> GetOrCreateDefaultAttributes()
     {
         return _attributes ??= new (string, SyntaxNode)[]
         {
             (
                 CoreConstants.GeneratedAttributeName,
-                AttributesManager.GetOrCreateAttributeDeclaration(
+                AttributeFactory.GetOrCreateAttributeDeclarationSyntax(
                     CoreConstants.GeneratedAttributeName,
                     new[] { AttributeTargets.Interface, AttributeTargets.Class },
-                    namespaceName)
+                    CoreConstants.AttributesNamespace)
             ),
             (
                 CoreConstants.ServiceAttributeName,
-                AttributesManager.GetOrCreateAttributeDeclaration(
+                AttributeFactory.GetOrCreateAttributeDeclarationSyntax(
                     CoreConstants.ServiceAttributeName,
                     new[] { AttributeTargets.Class },
-                    namespaceName)
+                    CoreConstants.AttributesNamespace)
             ),
             (
                 CoreConstants.InjectAttributeName,
-                AttributesManager.GetOrCreateAttributeDeclaration(
+                AttributeFactory.GetOrCreateAttributeDeclarationSyntax(
                     CoreConstants.InjectAttributeName,
                     new[] { AttributeTargets.Field, AttributeTargets.Property },
-                    namespaceName)
+                    CoreConstants.AttributesNamespace)
             )
         };
     }

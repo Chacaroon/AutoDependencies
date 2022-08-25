@@ -1,65 +1,81 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using AutoDependencies.Core.Constants;
+using AutoDependencies.Core.Factories;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AutoDependencies.Core;
 public class ServiceManager
 {
-    public static bool IsApplicableForSourceGeneration(ClassDeclarationSyntax node)
+    private readonly SemanticModel _semanticModel;
+
+    public ServiceManager(SemanticModel semanticModel)
     {
-        if (!node.Modifiers.Any(x => x.IsKind(SyntaxKind.PartialKeyword)))
+        _semanticModel = semanticModel;
+    }
+
+    public bool IsApplicableForSourceGeneration(ClassDeclarationSyntax node)
+    {
+        if (!node.Modifiers.Any(SyntaxKind.PartialKeyword) || node.Modifiers.Any(SyntaxKind.StaticKeyword))
         {
             return false;
         }
 
-        var hasGeneratedAttribute = node.AttributeLists.Any(x =>
-            x.Attributes.Any(x => x.Name == AttributesManager.GetOrCreateAttributeSyntax(CoreConstants.GeneratedAttributeName).Name));
+        if (!node.AttributeLists.Any())
+        {
+            return false;
+        }
 
-        return !hasGeneratedAttribute;
+        const string serviceAttributeFullName = $"{CoreConstants.AttributesNamespace}.{CoreConstants.ServiceAttributeName}";
+
+        foreach (var attributeList in node.AttributeLists)
+        {
+            foreach (var attribute in attributeList.Attributes)
+            {
+                var attributeName = attribute.Name.GetText().ToString();
+
+                if (!CoreConstants.ServiceAttributeName.StartsWith(attributeName))
+                {
+                    continue;
+                }
+
+                var attributeSymbol = _semanticModel.GetSymbolInfo(attribute).Symbol!.ContainingType;
+
+                if (serviceAttributeFullName == attributeSymbol.ToDisplayString())
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
-    public (string FileName, SyntaxNode Node) GenerateService(ClassDeclarationSyntax syntax, SemanticModel semanticModel)
+    public (string FileName, SyntaxNode Node) GenerateService(ClassDeclarationSyntax syntax)
     {
-        var (interfaceDeclaration, interfaceType) = GenerateInterface(syntax);
-        var interfaceList = SyntaxFactory.BaseList(
-            SyntaxFactory.SeparatedList(new BaseTypeSyntax[] { SyntaxFactory.SimpleBaseType(interfaceType) }));
+        var (interfaceDeclaration, interfaceIdentifier) = InterfaceServiceFactory.CreateInterfaceForClass(syntax);
 
-        var classDeclaration = GenerateClass(syntax, interfaceList);
+        var classDeclaration = ClassServiceFactory.GeneratePartialClassWithInterface(syntax, interfaceIdentifier);
 
-        var namespaceName = ModelExtensions.GetDeclaredSymbol(semanticModel, syntax)!.ContainingNamespace.ToDisplayString();
+        var namespaceName = _semanticModel
+            .GetDeclaredSymbol(syntax)!
+            .ContainingNamespace
+            .ToDisplayString();
 
         var namespaceDeclaration = SyntaxNodesFactory.CreateNamespace(
             namespaceName,
             new MemberDeclarationSyntax[] { classDeclaration, interfaceDeclaration });
 
-        return (syntax.Identifier.Text, namespaceDeclaration);
-    }
-
-    private (InterfaceDeclarationSyntax, IdentifierNameSyntax) GenerateInterface(ClassDeclarationSyntax syntax)
-    {
-        var interfaceName = $"I{syntax.Identifier.Text}";
-        var interfaceDeclaration = SyntaxFactory.InterfaceDeclaration(interfaceName)
-            .WithAttributeLists(SyntaxFactory.List(new[]
+        var root = SyntaxFactory.CompilationUnit()
+            .WithMembers(SyntaxFactory.List(new MemberDeclarationSyntax[]
             {
-                AttributesManager.GetOrCreateAttributeListSyntax(CoreConstants.GeneratedAttributeName)
+                namespaceDeclaration
             }))
-            .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword)));
-
-        var interfaceType = SyntaxFactory.IdentifierName(interfaceName);
-
-        return (interfaceDeclaration, interfaceType);
-    }
-
-    private ClassDeclarationSyntax GenerateClass(ClassDeclarationSyntax syntax, BaseListSyntax interfaces)
-    {
-        var classDeclaration = SyntaxFactory.ClassDeclaration(syntax.Identifier)
-            .WithAttributeLists(SyntaxFactory.List(new[]
+            .WithUsings(SyntaxNodesFactory.CreateUsingDirectiveList(new[]
             {
-                AttributesManager.GetOrCreateAttributeListSyntax(CoreConstants.GeneratedAttributeName)
-            }))
-            .WithModifiers(syntax.Modifiers)
-            .WithBaseList(interfaces);
+                CoreConstants.AttributesNamespace
+            }));
 
-        return classDeclaration;
+        return (syntax.Identifier.Text, root);
     }
 }

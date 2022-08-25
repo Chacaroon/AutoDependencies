@@ -1,20 +1,21 @@
 ﻿using System.Text.RegularExpressions;
+using AutoDependencies.Core.Constants;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace AutoDependencies.Core;
-public static class AttributesManager
+namespace AutoDependencies.Core.Factories;
+public static class AttributeFactory
 {
     private static readonly Dictionary<string, AttributeSyntax> Attributes = new();
     private static readonly Dictionary<string, AttributeListSyntax> AttributeLists = new();
 
-    public static CompilationUnitSyntax GetOrCreateAttributeDeclaration(
+    public static CompilationUnitSyntax GetOrCreateAttributeDeclarationSyntax(
         string attributeName,
         AttributeTargets[] attributeTargets,
         string namespaceName)
     {
-        var attributeUsageAttributeList = CreateAttributeUsageAttributeListsDeclaration(attributeTargets);
+        var attributeUsageAttributeList = CreateAttributeUsageAttributeListsDeclarationSyntax(attributeTargets);
 
         var attributeClassDeclaration = SyntaxFactory.ClassDeclaration(attributeName)
             .WithBaseList(SyntaxFactory.BaseList(SyntaxFactory.SeparatedList(new BaseTypeSyntax[]
@@ -70,7 +71,7 @@ public static class AttributesManager
         }));
     }
 
-    private static AttributeListSyntax CreateAttributeUsageAttributeListsDeclaration(AttributeTargets[] attributeTargets)
+    private static AttributeListSyntax CreateAttributeUsageAttributeListsDeclarationSyntax(AttributeTargets[] attributeTargets)
     {
         if (attributeTargets.Length == 0)
         {

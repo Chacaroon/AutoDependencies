@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AutoDependencies.Core;
+namespace AutoDependencies.Core.Constants;
 public class CoreConstants
 {
+    public const string AttributesNamespace = "AutoDependencies.Attributes";
+
     public const string GeneratedAttributeName = "GeneratedAttribute";
     public const string ServiceAttributeName = "ServiceAttribute";
     public const string InjectAttributeName = "InjectAttribute";

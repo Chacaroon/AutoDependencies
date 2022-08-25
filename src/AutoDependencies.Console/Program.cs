@@ -5,19 +5,20 @@ using Microsoft.CodeAnalysis;
 var workspaceManager = new WorkspaceManager();
 await workspaceManager.PrepareWorkspaceAsync(ConsoleConstants.AutoDependenciesServicesProjectName);
 
-var serviceManager = new ServiceManager();
-
 var project = workspaceManager.GetProject(ConsoleConstants.AutoDependenciesServicesProjectName);
 
 var generatedServices = new List<(string, SyntaxNode)>();
 
 foreach (var document in project.Documents)
 {
-    var visitor = new ServiceVisitor();
-    visitor.Visit(await document.GetSyntaxRootAsync());
-
     var semanticModel = await document.GetSemanticModelAsync();
-    var services = visitor.ServiceNodes.Select(x => serviceManager.GenerateService(x, semanticModel!));
+    var serviceManager = new ServiceManager(semanticModel!);
+    var visitor = new ServiceVisitor(serviceManager);
+
+    visitor.Visit(await document.GetSyntaxRootAsync());
+    
+    var services = visitor.ServiceNodes.Select(x => serviceManager.GenerateService(x));
+    
     generatedServices.AddRange(services);
 }
 
