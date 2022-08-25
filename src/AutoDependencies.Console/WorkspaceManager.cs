@@ -28,7 +28,7 @@ internal class WorkspaceManager
         await _workspace.OpenSolutionAsync(SolutionPath);
 
         Console.WriteLine("Remove generated files");
-        RemoveDocuments(ConsoleConstants.AutoDependenciesServicesProjectName, x => x.Name.EndsWith(".g.cs"));
+        RemoveDocuments(ConsoleConstants.AutoDependenciesServicesProjectName, x => x.Name.EndsWith(CoreConstants.GeneratedDocumentExtension));
         
         Console.WriteLine("Generate default attributes");
         var defaultAttributes = DefaultAttributes.GetOrCreateDefaultAttributes();

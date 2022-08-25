@@ -6,15 +6,16 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AutoDependencies.Core.Factories;
-internal static class InterfaceServiceFactory
+internal static class InterfaceSyntaxFactory
 {
     public static (InterfaceDeclarationSyntax, IdentifierNameSyntax) CreateInterfaceForClass(ClassDeclarationSyntax classDeclarationSyntax)
     {
         var interfaceName = $"I{classDeclarationSyntax.Identifier.Text}";
+
         var interfaceDeclaration = SyntaxFactory.InterfaceDeclaration(interfaceName)
             .WithAttributeLists(SyntaxFactory.List(new[]
             {
-                AttributeFactory.GetOrCreateAttributeListSyntax(CoreConstants.GeneratedAttributeName)
+                AttributeSyntaxFactory.GetOrCreateAttributeListSyntax(CoreConstants.GeneratedAttributeName)
             }))
             .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword)));
 

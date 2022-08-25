@@ -12,12 +12,12 @@ var generatedServices = new List<(string, SyntaxNode)>();
 foreach (var document in project.Documents)
 {
     var semanticModel = await document.GetSemanticModelAsync();
-    var serviceManager = new ServiceManager(semanticModel!);
+    var serviceManager = new ServiceGenerator(semanticModel!);
     var visitor = new ServiceVisitor(serviceManager);
 
     visitor.Visit(await document.GetSyntaxRootAsync());
     
-    var services = visitor.ServiceNodes.Select(x => serviceManager.GenerateService(x));
+    var services = visitor.ServiceNodes.Select(x => serviceManager.GenerateService(x, semanticModel!));
     
     generatedServices.AddRange(services);
 }

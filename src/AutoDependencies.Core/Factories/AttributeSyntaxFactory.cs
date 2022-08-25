@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AutoDependencies.Core.Factories;
-public static class AttributeFactory
+public static class AttributeSyntaxFactory
 {
     private static readonly Dictionary<string, AttributeSyntax> Attributes = new();
     private static readonly Dictionary<string, AttributeListSyntax> AttributeLists = new();
@@ -29,7 +29,7 @@ public static class AttributeFactory
                     attributeUsageAttributeList
                 }));
 
-        var namespaceDeclaration = SyntaxNodesFactory.CreateNamespace(namespaceName, new[] { attributeClassDeclaration });
+        var namespaceDeclaration = CommonMembersSyntaxFactory.CreateNamespace(namespaceName, new[] { attributeClassDeclaration });
 
         var root = SyntaxFactory.CompilationUnit()
             .WithMembers(SyntaxFactory.List(new MemberDeclarationSyntax[]
@@ -40,6 +40,8 @@ public static class AttributeFactory
             {
                 SyntaxFactory.UsingDirective(SyntaxFactory.IdentifierName(nameof(System)))
             }));
+
+        GetOrCreateAttributeSyntax(attributeName);
 
         return root;
     }
@@ -77,11 +79,9 @@ public static class AttributeFactory
         {
             attributeTargets = new[] { AttributeTargets.All };
         }
-
-        var attributeTargetsExpression = CreateAttributeTargetExpression(attributeTargets[0]);
-
+        
         var attributeUsageParam = attributeTargets.Skip(1).Aggregate(
-            attributeTargetsExpression,
+            CreateAttributeTargetExpression(attributeTargets[0]),
             (syntax, targets) => SyntaxFactory.BinaryExpression(
                 SyntaxKind.BitwiseOrExpression,
                 syntax,
@@ -93,11 +93,8 @@ public static class AttributeFactory
                 SyntaxFactory.AttributeArgument(attributeUsageParam)
             }));
 
-        const string attributeUsageName = nameof(AttributeUsageAttribute);
-
-        var attributeUsageAttribute = SyntaxFactory.Attribute(
-            SyntaxFactory.IdentifierName(attributeUsageName),
-            arguments);
+        var attributeUsageAttribute = GetOrCreateAttributeSyntax(nameof(AttributeUsageAttribute))
+            .WithArgumentList(arguments);
 
         return SyntaxFactory.AttributeList(SyntaxFactory.SeparatedList(new[]
         {

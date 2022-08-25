@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using AutoDependencies.Core.Constants;
 
 namespace AutoDependencies.Core.Factories;
-internal static class SyntaxNodesFactory
+internal static class CommonMembersSyntaxFactory
 {
     public static NamespaceDeclarationSyntax CreateNamespace(string namespaceName, IEnumerable<MemberDeclarationSyntax>? members = null)
     {

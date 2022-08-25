@@ -15,21 +15,21 @@ public static class DefaultAttributes
         {
             (
                 CoreConstants.GeneratedAttributeName,
-                AttributeFactory.GetOrCreateAttributeDeclarationSyntax(
+                AttributeSyntaxFactory.GetOrCreateAttributeDeclarationSyntax(
                     CoreConstants.GeneratedAttributeName,
                     new[] { AttributeTargets.Interface, AttributeTargets.Class },
                     CoreConstants.AttributesNamespace)
             ),
             (
                 CoreConstants.ServiceAttributeName,
-                AttributeFactory.GetOrCreateAttributeDeclarationSyntax(
+                AttributeSyntaxFactory.GetOrCreateAttributeDeclarationSyntax(
                     CoreConstants.ServiceAttributeName,
                     new[] { AttributeTargets.Class },
                     CoreConstants.AttributesNamespace)
             ),
             (
                 CoreConstants.InjectAttributeName,
-                AttributeFactory.GetOrCreateAttributeDeclarationSyntax(
+                AttributeSyntaxFactory.GetOrCreateAttributeDeclarationSyntax(
                     CoreConstants.InjectAttributeName,
                     new[] { AttributeTargets.Field, AttributeTargets.Property },
                     CoreConstants.AttributesNamespace)
