@@ -17,9 +17,16 @@ class ServiceVisitor : CSharpSyntaxWalker
         
     public override void VisitClassDeclaration(ClassDeclarationSyntax node)
     {
-        if (_serviceGenerator.IsApplicableForSourceGeneration(node))
+        if (!ServiceGenerator.IsCandidateForGeneration(node))
         {
-            ServiceNodes.Add(node);
+            return;
         }
+
+        if (!_serviceGenerator.IsApplicableForSourceGeneration(node))
+        {
+            return;
+        }
+
+        ServiceNodes.Add(node);
     }
 }

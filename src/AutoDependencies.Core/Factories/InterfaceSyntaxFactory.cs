@@ -10,7 +10,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace AutoDependencies.Core.Factories;
 internal static class InterfaceSyntaxFactory
 {
-    public static (InterfaceDeclarationSyntax, IdentifierNameSyntax) CreateInterfaceForClass(ClassDeclarationSyntax classDeclarationSyntax)
+    public static InterfaceDeclarationSyntax CreateInterfaceDeclarationSyntax(ClassDeclarationSyntax classDeclarationSyntax)
     {
         var interfaceName = $"I{classDeclarationSyntax.Identifier.Text}";
 
@@ -20,14 +20,12 @@ internal static class InterfaceSyntaxFactory
                 AttributeSyntaxFactory.GetOrCreateAttributeListSyntax(CoreConstants.GeneratedAttributeName)
             }))
             .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword)))
-            .WithMembers(GetInterfaceMembers(classDeclarationSyntax));
+            .WithMembers(CreateInterfaceMembers(classDeclarationSyntax));
 
-        var interfaceIdentifier = SyntaxFactory.IdentifierName(interfaceName);
-
-        return (interfaceDeclaration, interfaceIdentifier);
+        return interfaceDeclaration;
     }
 
-    private static SyntaxList<MemberDeclarationSyntax> GetInterfaceMembers(
+    private static SyntaxList<MemberDeclarationSyntax> CreateInterfaceMembers(
         ClassDeclarationSyntax classDeclarationSyntax)
     {
         var result = classDeclarationSyntax.Members

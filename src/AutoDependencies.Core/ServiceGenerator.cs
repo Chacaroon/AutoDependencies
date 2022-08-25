@@ -8,12 +8,16 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace AutoDependencies.Core;
 public class ServiceGenerator
 {
-    private readonly SemanticModel _documentSemanticModel;
+    private readonly SemanticModel _semanticModel;
 
-    public ServiceGenerator(
-        SemanticModel documentSemanticModel)
+    public ServiceGenerator(SemanticModel semanticModel)
     {
-        _documentSemanticModel = documentSemanticModel;
+        _semanticModel = semanticModel;
+    }
+
+    public static bool IsCandidateForGeneration(SyntaxNode node)
+    {
+        return node is ClassDeclarationSyntax { AttributeLists.Count: > 0 };
     }
 
     public bool IsApplicableForSourceGeneration(ClassDeclarationSyntax node)
@@ -28,19 +32,19 @@ public class ServiceGenerator
             return false;
         }
 
-        return node.HasAttribute(CoreConstants.ServiceAttributeName, _documentSemanticModel);
+        return node.HasAttribute(CoreConstants.ServiceAttributeName, _semanticModel);
     }
 
     public (string FileName, SyntaxNode Node) GenerateService(
-        ClassDeclarationSyntax classDeclarationSyntax,
-        SemanticModel semanticModel)
+        ClassDeclarationSyntax classDeclarationSyntax)
     {
-        var (interfaceDeclaration, interfaceIdentifier) = InterfaceSyntaxFactory.CreateInterfaceForClass(classDeclarationSyntax);
+        var interfaceDeclaration = InterfaceSyntaxFactory.CreateInterfaceDeclarationSyntax(classDeclarationSyntax);
+        var interfaceIdentifier = SyntaxFactory.IdentifierName(interfaceDeclaration.Identifier.Text);
 
         var classDeclaration = ClassSyntaxFactory.GeneratePartialClassWithInterface(
             classDeclarationSyntax, 
             interfaceIdentifier,
-            semanticModel);
+            _semanticModel);
 
         var namespaceDeclaration = CreateNamespaceDeclarationSyntax(
             classDeclarationSyntax,
@@ -63,7 +67,7 @@ public class ServiceGenerator
         ClassDeclarationSyntax sourceClassDeclarationSyntax,
         MemberDeclarationSyntax[] members)
     {
-        var namespaceName = _documentSemanticModel
+        var namespaceName = _semanticModel
             .GetDeclaredSymbol(sourceClassDeclarationSyntax)!
             .ContainingNamespace
             .ToDisplayString();

@@ -41,8 +41,6 @@ public static class AttributeSyntaxFactory
                 SyntaxFactory.UsingDirective(SyntaxFactory.IdentifierName(nameof(System)))
             }));
 
-        GetOrCreateAttributeSyntax(attributeName);
-
         return root;
     }
 
