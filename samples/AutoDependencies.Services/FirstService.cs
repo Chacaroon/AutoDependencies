@@ -1,22 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using AutoDependencies.Attributes;
 
 namespace AutoDependencies.Services;
 
 [Service]
-public partial class FirstService
+internal partial class FirstService
 {
     private readonly ISecondService _secondService;
 
-    [Inject]
-    public IThirdService ThirdService { get; set; }
-
-    private readonly Dictionary<string, string> _cache = new();
-    private readonly Dictionary<string, string> _cache1;
-
     public void DoSmth()
     {
-        _secondService.DoSmthElse();
     }
 }
-

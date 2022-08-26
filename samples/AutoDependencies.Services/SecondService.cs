@@ -1,12 +1,13 @@
-﻿using AutoDependencies.Attributes;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using AutoDependencies.Attributes;
 
 namespace AutoDependencies.Services;
 
 [Service]
-public partial class SecondService
+internal partial class SecondService
 {
-    public void DoSmthElse()
-    {
-
-    }
 }

@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AutoDependencies.Core\AutoDependencies.Core.csproj" />
+    <ProjectReference Include="..\..\src\AutoDependencies.Core\AutoDependencies.Core.csproj" />
   </ItemGroup>
 
 </Project>
