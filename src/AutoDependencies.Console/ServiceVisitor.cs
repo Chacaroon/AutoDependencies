@@ -6,23 +6,23 @@ namespace AutoDependencies.ConsoleApp;
 
 class ServiceVisitor : CSharpSyntaxWalker
 {
-    private readonly ServiceGenerator _serviceGenerator;
+    private readonly ServiceAnalyzer _serviceAnalyzer;
 
-    public ServiceVisitor(ServiceGenerator serviceGenerator)
+    public ServiceVisitor(ServiceAnalyzer serviceAnalyzer)
     {
-        _serviceGenerator = serviceGenerator;
+        _serviceAnalyzer = serviceAnalyzer;
     }
 
     public List<ClassDeclarationSyntax> ServiceNodes { get; } = new();
         
     public override void VisitClassDeclaration(ClassDeclarationSyntax node)
     {
-        if (!ServiceGenerator.IsCandidateForGeneration(node))
+        if (!ServiceAnalyzer.IsCandidateForGeneration(node))
         {
             return;
         }
 
-        if (!_serviceGenerator.IsApplicableForSourceGeneration(node))
+        if (!_serviceAnalyzer.IsApplicableForSourceGeneration(node))
         {
             return;
         }

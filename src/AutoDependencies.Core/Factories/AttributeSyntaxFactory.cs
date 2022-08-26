@@ -29,7 +29,7 @@ public static class AttributeSyntaxFactory
                     attributeUsageAttributeList
                 }));
 
-        var namespaceDeclaration = CommonMembersSyntaxFactory.CreateNamespace(namespaceName, new[] { attributeClassDeclaration });
+        var namespaceDeclaration = NamespaceSyntaxFactory.CreateNamespace(namespaceName, new[] { attributeClassDeclaration });
 
         var root = SyntaxFactory.CompilationUnit()
             .WithMembers(SyntaxFactory.List(new MemberDeclarationSyntax[]

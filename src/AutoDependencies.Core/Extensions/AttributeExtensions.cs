@@ -26,9 +26,8 @@ internal static class AttributeExtensions
                 }
 
                 var attributeFullName = semanticModel
-                    .GetSymbolInfo(attributeSyntax)
-                    .Symbol!
-                    .ContainingType
+                    .GetTypeInfo(attributeSyntax)
+                    .Type!
                     .ToDisplayString();
 
                 if (attributeFullName == attributeName.ToAttributeFullName())
