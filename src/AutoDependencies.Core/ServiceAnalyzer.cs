@@ -87,10 +87,11 @@ public class ServiceAnalyzer
 
         var fieldDeclarations = memberDeclarations
             .OfType<FieldDeclarationSyntax>()
+            .Where(x => x.Declaration.Variables.First().Initializer == null)
             .Select(x => new ConstructorMemberInfo
             {
                 Name = x.Declaration.Variables.First().Identifier.ValueText,
-                Type = x.Declaration.Type,
+                Type = SyntaxFactory.IdentifierName(_semanticModel.GetTypeInfo(x.Declaration.Type).Type!.ToDisplayString()),
             });
 
         var propertyDeclarations = memberDeclarations
