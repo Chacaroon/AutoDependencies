@@ -1,22 +1,16 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis;
-using System;
-using System.Collections.Generic;
-using System.Net.Http.Headers;
-using System.Text;
 using AutoDependencies.Core.Constants;
 using AutoDependencies.Core.Extensions;
 using AutoDependencies.Core.Models;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Rename;
 
 namespace AutoDependencies.Core;
 public class ServiceAnalyzer
 {
     private readonly SemanticModel _semanticModel;
 
-    private readonly SyntaxKind[] _deniedModifiers = new[]
-    {
+    private readonly SyntaxKind[] _forbiddenModifiers = {
         SyntaxKind.StaticKeyword,
         SyntaxKind.AbstractKeyword
     };
@@ -38,7 +32,7 @@ public class ServiceAnalyzer
             return false;
         }
 
-        if (_deniedModifiers.Any(x => node.Modifiers.Any(x)))
+        if (_forbiddenModifiers.Any(x => node.Modifiers.Any(x)))
         {
             return false;
         }
@@ -71,7 +65,7 @@ public class ServiceAnalyzer
             {
                 Name = x.Identifier.ValueText,
                 ParameterList = x.ParameterList,
-                ReturnType = x.ReturnType,
+                ReturnType = x.ReturnType.ToFullNameTypeSyntax(_semanticModel),
             })
             .ToArray();
     }
@@ -80,30 +74,47 @@ public class ServiceAnalyzer
     {
         var memberDeclarations = classDeclarationSyntax.DescendantNodes()
             .OfType<MemberDeclarationSyntax>()
-            .Where(x =>
-                x.Modifiers.Any(SyntaxKind.ReadOnlyKeyword)
-                || x.HasAttribute(CoreConstants.InjectAttributeName, _semanticModel))
+            .Where(CanBeConstructorMember)
             .ToArray();
 
         var fieldDeclarations = memberDeclarations
             .OfType<FieldDeclarationSyntax>()
-            .Where(x => x.Declaration.Variables.First().Initializer == null)
-            .Select(x => new ConstructorMemberInfo
-            {
-                Name = x.Declaration.Variables.First().Identifier.ValueText,
-                Type = SyntaxFactory.IdentifierName(_semanticModel.GetTypeInfo(x.Declaration.Type).Type!.ToDisplayString()),
-            });
+            .Select(x => (VariableDeclaration: x.Declaration.Variables.First(), x.Declaration.Type))
+            .Where(x => x.VariableDeclaration.Initializer == null)
+            .Select(x => CreateConstructorMemberInfo(x.VariableDeclaration.Identifier, x.Type));
 
         var propertyDeclarations = memberDeclarations
             .OfType<PropertyDeclarationSyntax>()
-            .Select(x => new ConstructorMemberInfo
-            {
-                Name = x.Identifier.ValueText,
-                Type = x.Type
-            });
+            .Where(x => x.Initializer == null)
+            .Select(x => CreateConstructorMemberInfo(x.Identifier, x.Type));
 
         return fieldDeclarations
             .Concat(propertyDeclarations)
             .ToArray();
+    }
+
+    private bool CanBeConstructorMember(MemberDeclarationSyntax memberDeclarationSyntax)
+    {
+        if (memberDeclarationSyntax.Modifiers.Any(SyntaxKind.StaticKeyword))
+        {
+            return false;
+        }
+
+        if (memberDeclarationSyntax.Modifiers.Any(SyntaxKind.PrivateKeyword)
+            && memberDeclarationSyntax.Modifiers.Any(SyntaxKind.ReadOnlyKeyword))
+        {
+            return true;
+        }
+
+        return memberDeclarationSyntax.HasAttribute(CoreConstants.InjectAttributeName, _semanticModel);
+    }
+
+    private ConstructorMemberInfo CreateConstructorMemberInfo(SyntaxToken identifier, TypeSyntax type)
+    {
+        return new ConstructorMemberInfo
+        {
+            Name = identifier.Text,
+            Type = type.ToFullNameTypeSyntax(_semanticModel)
+        };
     }
 }

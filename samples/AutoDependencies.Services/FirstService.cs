@@ -11,8 +11,10 @@ namespace AutoDependencies.Services;
 internal partial class FirstService
 {
     private readonly ISecondService _secondService;
+    private readonly HashSet<string> _cache;
 
-    public void DoSmth()
+    public Dictionary<string, string> DoSmth()
     {
+        return null;
     }
 }

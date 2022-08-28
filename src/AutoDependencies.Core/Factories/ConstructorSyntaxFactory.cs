@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AutoDependencies.Core.Constants;
-using AutoDependencies.Core.Extensions;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using AutoDependencies.Core.Models;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AutoDependencies.Core.Factories;
-internal static class ConstructorSyntaxFactory
+internal class ConstructorSyntaxFactory
 {
     private static readonly Regex UnderscoreRegex = new("^_", RegexOptions.Compiled);
 
@@ -31,10 +25,18 @@ internal static class ConstructorSyntaxFactory
 
     private static ParameterListSyntax CreateConstructorParameters(ConstructorMemberInfo[] constructorMembersInfo)
     {
+        if (constructorMembersInfo.Length == 0)
+        {
+            return SyntaxFactory.ParameterList();
+        }
+
         var parameters = constructorMembersInfo
-            .Select(x => (x.Type, Name: ProcessMemberName(x.Name)))
-            .Select(x => SyntaxFactory.Parameter(SyntaxFactory.Identifier(x.Name)).WithType(x.Type))
+            .Select(x => (x.Type, Name: NormalizeMemberName(x.Name)))
+            .Select(x => SyntaxFactory
+                .Parameter(SyntaxFactory.Identifier(x.Name))
+                .WithType(x.Type))
             .ToArray();
+        
 
         return SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList(parameters));
     }
@@ -45,7 +47,7 @@ internal static class ConstructorSyntaxFactory
             .Select(x => SyntaxFactory.AssignmentExpression(
                 SyntaxKind.SimpleAssignmentExpression,
                 SyntaxFactory.IdentifierName(x.Name),
-                SyntaxFactory.IdentifierName(ProcessMemberName(x.Name))))
+                SyntaxFactory.IdentifierName(NormalizeMemberName(x.Name))))
             .Select(SyntaxFactory.ExpressionStatement)
             .Cast<StatementSyntax>()
             .ToArray();
@@ -53,7 +55,7 @@ internal static class ConstructorSyntaxFactory
         return expressionStatements;
     }
 
-    private static string ProcessMemberName(string identifier)
+    private static string NormalizeMemberName(string identifier)
     {
         identifier = UnderscoreRegex.Replace(identifier, string.Empty);
 

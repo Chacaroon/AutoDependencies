@@ -8,8 +8,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="FirstService.cs" />
+    <Compile Include="Generated/FirstService.g.cs" />
+    <Compile Include="Generated/GeneratedAttribute.g.cs" />
+    <Compile Include="Generated/InjectAttribute.g.cs" />
+    <Compile Include="Generated/SecondService.g.cs" />
+    <Compile Include="Generated/ServiceAttribute.g.cs" />
+    <Compile Include="Generated/ThirdService.g.cs" />
     <Compile Include="SecondService.cs" />
     <Compile Include="ThirdService.cs" />
-    <Compile Include="Generated/*" />
   </ItemGroup>
 </Project>
