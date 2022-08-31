@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Concurrent;
+using System.Text.RegularExpressions;
 using AutoDependencies.Core.Constants;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -7,8 +8,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace AutoDependencies.Core.Factories;
 public static class AttributeSyntaxFactory
 {
-    private static readonly Dictionary<string, AttributeSyntax> Attributes = new();
-    private static readonly Dictionary<string, AttributeListSyntax> AttributeLists = new();
+    private static readonly ConcurrentDictionary<string, AttributeSyntax> Attributes = new();
+    private static readonly ConcurrentDictionary<string, AttributeListSyntax> AttributeLists = new();
 
     public static CompilationUnitSyntax GetOrCreateAttributeDeclarationSyntax(
         string attributeName,
@@ -38,8 +39,9 @@ public static class AttributeSyntaxFactory
             }))
             .WithUsings(SyntaxFactory.List(new[]
             {
-                SyntaxFactory.UsingDirective(SyntaxFactory.IdentifierName(nameof(System)))
-            }));
+                SyntaxFactory.UsingDirective(SyntaxFactory.IdentifierName(nameof(System))),
+            }))
+            .NormalizeWhitespace();
 
         return root;
     }

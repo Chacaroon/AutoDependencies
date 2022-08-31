@@ -35,18 +35,18 @@ internal class WorkspaceManager
         AddDocuments(projectName, defaultAttributes);
     }
 
-    public void AddDocuments(string projectName, IEnumerable<(string FileName, SyntaxNode Node)> nodes)
+    public void AddDocuments(string projectName, IReadOnlyDictionary<string, SyntaxNode> nodes)
     {
         var project = GetProject(projectName);
 
         var solution = nodes.Aggregate(
             GetSolution(),
-            (solution, x) => AddDocument(solution, project, x.FileName, x.Node));
+            (solution, x) => AddDocument(solution, project, x.Key, x.Value));
 
         var result = _workspace.TryApplyChanges(solution);
 
         Console.WriteLine($"Add documents: {result}");
-        Console.WriteLine($"Added documents: {Environment.NewLine}{string.Join(Environment.NewLine, nodes.Select(x => x.FileName))}");
+        Console.WriteLine($"Added documents: {Environment.NewLine}{string.Join(Environment.NewLine, nodes.Select(x => x.Key))}");
         Console.WriteLine();
     }
 

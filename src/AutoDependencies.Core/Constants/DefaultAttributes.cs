@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using AutoDependencies.Core.Factories;
@@ -7,33 +8,38 @@ using Microsoft.CodeAnalysis;
 namespace AutoDependencies.Core.Constants;
 public static class DefaultAttributes
 {
-    private static IEnumerable<(string, SyntaxNode)>? _attributes;
+    private static readonly (string Name, AttributeTargets[] Targets)[] DefaultAttributeNames = {
+        (CoreConstants.GeneratedAttributeName, new[] { AttributeTargets.Interface, AttributeTargets.Class }),
+        (CoreConstants.InjectAttributeName, new[] { AttributeTargets.Property, AttributeTargets.Field}),
+        (CoreConstants.ServiceAttributeName, new[] { AttributeTargets.Class })
 
-    public static IEnumerable<(string, SyntaxNode)> GetOrCreateDefaultAttributes()
+    };
+    private static readonly ConcurrentDictionary<string, SyntaxNode> AttributeDeclarations = new();
+
+    public static IReadOnlyDictionary<string, SyntaxNode> GetOrCreateDefaultAttributes(CancellationToken cancellationToken = default)
     {
-        return _attributes ??= new (string, SyntaxNode)[]
+        if (AttributeDeclarations.Count == DefaultAttributeNames.Length)
         {
-            (
-                CoreConstants.GeneratedAttributeName,
-                AttributeSyntaxFactory.GetOrCreateAttributeDeclarationSyntax(
-                    CoreConstants.GeneratedAttributeName,
-                    new[] { AttributeTargets.Interface, AttributeTargets.Class },
-                    CoreConstants.AttributesNamespace)
-            ),
-            (
-                CoreConstants.ServiceAttributeName,
-                AttributeSyntaxFactory.GetOrCreateAttributeDeclarationSyntax(
-                    CoreConstants.ServiceAttributeName,
-                    new[] { AttributeTargets.Class },
-                    CoreConstants.AttributesNamespace)
-            ),
-            (
-                CoreConstants.InjectAttributeName,
-                AttributeSyntaxFactory.GetOrCreateAttributeDeclarationSyntax(
-                    CoreConstants.InjectAttributeName,
-                    new[] { AttributeTargets.Field, AttributeTargets.Property },
-                    CoreConstants.AttributesNamespace)
-            )
-        };
+            return AttributeDeclarations;
+        }
+
+        foreach (var (name, targets) in DefaultAttributeNames)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (AttributeDeclarations.ContainsKey(name))
+            {
+                continue;
+            }
+
+            var attributeDeclarationSyntax = AttributeSyntaxFactory.GetOrCreateAttributeDeclarationSyntax(
+                name,
+                targets,
+                CoreConstants.AttributesNamespace);
+
+            AttributeDeclarations[name] = attributeDeclarationSyntax;
+        }
+
+        return AttributeDeclarations;
     }
 }

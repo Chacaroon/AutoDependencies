@@ -9,11 +9,10 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace AutoDependencies.Core;
 public class ServiceGenerator
 {
-    public SyntaxNode GenerateService(
-        ServiceInfo serviceInfo,
-        ConstructorMemberInfo[] constructorMembersInfo,
-        InterfaceMemberInfo[] interfaceMembersInfo)
+    public SyntaxNode GenerateService(ServiceToGenerateInfo serviceToGenerateInfo)
     {
+        var (serviceInfo, interfaceMembersInfo, constructorMembersInfo) = serviceToGenerateInfo;
+
         var interfaceDeclaration = InterfaceSyntaxFactory.CreateInterfaceDeclarationSyntax(serviceInfo.InterfaceName, interfaceMembersInfo);
         var constructorDeclarationSyntax = ConstructorSyntaxFactory.CreateConstructor(serviceInfo, constructorMembersInfo);
 
@@ -33,6 +32,6 @@ public class ServiceGenerator
                 CoreConstants.AttributesNamespace
             }));
 
-        return root;
+        return root.NormalizeWhitespace();
     }
 }

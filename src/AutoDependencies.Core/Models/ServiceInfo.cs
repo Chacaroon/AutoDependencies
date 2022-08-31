@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
+
+#nullable disable
 
 namespace AutoDependencies.Core.Models;
 public class ServiceInfo

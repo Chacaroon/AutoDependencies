@@ -10,7 +10,7 @@ public class ServiceAnalyzer
 {
     private readonly SemanticModel _semanticModel;
 
-    private readonly SyntaxKind[] _forbiddenModifiers = {
+    private static readonly SyntaxKind[] ForbiddenModifiers = {
         SyntaxKind.StaticKeyword,
         SyntaxKind.AbstractKeyword
     };
@@ -25,22 +25,30 @@ public class ServiceAnalyzer
         return node is ClassDeclarationSyntax { AttributeLists.Count: > 0 };
     }
 
-    public bool IsApplicableForSourceGeneration(ClassDeclarationSyntax node)
+    public static bool IsApplicableForSourceGeneration(ClassDeclarationSyntax node, SemanticModel semanticModel)
     {
         if (!node.Modifiers.Any(SyntaxKind.PartialKeyword))
         {
             return false;
         }
 
-        if (_forbiddenModifiers.Any(x => node.Modifiers.Any(x)))
+        if (ForbiddenModifiers.Any(x => node.Modifiers.Any(x)))
         {
             return false;
         }
 
-        return node.HasAttribute(CoreConstants.ServiceAttributeName, _semanticModel);
+        return node.HasAttribute(CoreConstants.ServiceAttributeName, semanticModel);
     }
 
-    public ServiceInfo GetServiceInfo(ClassDeclarationSyntax classDeclarationSyntax)
+    public ServiceToGenerateInfo GetServiceToGenerateInfo(ClassDeclarationSyntax classDeclarationSyntax)
+    {
+        return new(
+            GetServiceInfo(classDeclarationSyntax),
+            GetInterfaceMembersInfo(classDeclarationSyntax),
+            GetConstructorMembersInfo(classDeclarationSyntax));
+    }
+
+    private ServiceInfo GetServiceInfo(ClassDeclarationSyntax classDeclarationSyntax)
     {
         var namespaceName = _semanticModel
             .GetDeclaredSymbol(classDeclarationSyntax)!
@@ -55,7 +63,7 @@ public class ServiceAnalyzer
         };
     }
 
-    public InterfaceMemberInfo[] GetInterfaceMembersInfo(ClassDeclarationSyntax classDeclarationSyntax)
+    private InterfaceMemberInfo[] GetInterfaceMembersInfo(ClassDeclarationSyntax classDeclarationSyntax)
     {
         return classDeclarationSyntax.Members
             .OfType<MethodDeclarationSyntax>()
@@ -70,7 +78,7 @@ public class ServiceAnalyzer
             .ToArray();
     }
 
-    public ConstructorMemberInfo[] GetConstructorMembersInfo(ClassDeclarationSyntax classDeclarationSyntax)
+    private ConstructorMemberInfo[] GetConstructorMembersInfo(ClassDeclarationSyntax classDeclarationSyntax)
     {
         var memberDeclarations = classDeclarationSyntax.DescendantNodes()
             .OfType<MemberDeclarationSyntax>()
