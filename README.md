@@ -7,8 +7,8 @@ AutoDependencies is a library designed to get rid of boilerplate code in ASP.NET
 - [x] Generate a partial service
 - [x] Generate constructor with injected services and save ones to the appropriate service members
 - [x] Generate an interface with public methods of a service
+- [x] Generate code with Incremental Generatort
 - [ ] Generate method that registers all generated services to the `IServiceCollection`
-- [ ] Generate code with Incremental Generatort
 - [ ] Add code analyzer with code fix
 - [ ] Cover generator and analyzer with tests
 - [ ] Create and publish nuget packages
@@ -18,8 +18,6 @@ AutoDependencies is a library designed to get rid of boilerplate code in ASP.NET
 TODO: Will be described after publishing packages to NuGet
 
 ## Usage
-
-### ⚠️ The flow described below will be valid when the Generate Code with an Incremental Generator feature is implemented. For now, you can set up a [Playgroun](/docs/playground.md) to trigger code generation with console.
 
 First, create the service with some dependencies and public methods. Mark just created service with `[Service]` attribute, so source generator will process it.
 
