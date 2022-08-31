@@ -18,6 +18,32 @@ public class ServiceConstructorSnapshotTests : SnapshotTestsBase<ServiceGenerato
         return Verify(source, new[] { TestData.ExternalService });
     }
 
+    [Theory]
+    [InlineData("IExternalService?")]
+    [InlineData("List<IExternalService>?")]
+    [InlineData("List<IExternalService?>")]
+    [InlineData("List<IExternalService?>?")]
+    [InlineData("int?")]
+    [InlineData("int[]?")]
+    [InlineData("int?[]")]
+    [InlineData("int?[]?")]
+    [InlineData("Nullable<int>")]
+    [InlineData("Nullable<int[]>")]
+    public Task PrivateReadonlyFieldNullableType_GeneratesConstructorAndAssignProperty(string type)
+    {
+        var usingDirectives = new[]
+        {
+            "using System;",
+            "using System.Collections.Generic;",
+            "using ExternalLib.Services;"
+        };
+        var members = $"private readonly {type} _externalService;";
+
+        var source = GetSource(members, usingDirectives);
+
+        return Verify(source, new[] { TestData.ExternalService }).UseParameters(type.Replace("?", "null"));
+    }
+
     [Fact]
     public Task PropertiesAndFieldsWithInjectAttribute_GeneratesConstructorAndAssignPropertiesAndFields()
     {

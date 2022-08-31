@@ -27,6 +27,7 @@ public class ServiceInterfaceSnapshotTests : SnapshotTestsBase<ServiceGenerator>
     public string TestMethod() {
         return null;
     }";
+        
         var source = GetSource(members);
 
         return Verify(source);
@@ -37,6 +38,7 @@ public class ServiceInterfaceSnapshotTests : SnapshotTestsBase<ServiceGenerator>
     {
         var members = @"
     public string TestMethod() => null;";
+        
         var source = GetSource(members);
 
         return Verify(source);
@@ -53,6 +55,7 @@ public class ServiceInterfaceSnapshotTests : SnapshotTestsBase<ServiceGenerator>
     {modifier} void TestMethod() {{
         return;
     }}";
+
         var source = GetSource(members);
 
         return Verify(source).UseParameters(modifier);

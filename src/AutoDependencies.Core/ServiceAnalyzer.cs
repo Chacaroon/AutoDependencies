@@ -89,12 +89,14 @@ public class ServiceAnalyzer
             .OfType<FieldDeclarationSyntax>()
             .Select(x => (VariableDeclaration: x.Declaration.Variables.First(), x.Declaration.Type))
             .Where(x => x.VariableDeclaration.Initializer == null)
-            .Select(x => CreateConstructorMemberInfo(x.VariableDeclaration.Identifier, x.Type));
+            .Select(x => CreateConstructorMemberInfo(x.VariableDeclaration.Identifier, x.Type))
+            .ToArray();
 
         var propertyDeclarations = memberDeclarations
             .OfType<PropertyDeclarationSyntax>()
             .Where(x => x.Initializer == null)
-            .Select(x => CreateConstructorMemberInfo(x.Identifier, x.Type));
+            .Select(x => CreateConstructorMemberInfo(x.Identifier, x.Type))
+            .ToArray();
 
         return fieldDeclarations
             .Concat(propertyDeclarations)

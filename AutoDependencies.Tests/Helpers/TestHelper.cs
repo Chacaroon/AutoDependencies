@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Reflection;
 using AutoDependencies.Core.Constants;
 using AutoDependencies.Core.Factories;
 using Microsoft.CodeAnalysis;
@@ -16,7 +17,9 @@ internal static class TestHelper
             .Select(_ => MetadataReference.CreateFromFile(_.Location))
             .Concat(new[]
             {
+                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(T).Assembly.Location),
+                MetadataReference.CreateFromFile(Assembly.Load("System.Runtime").Location)
             });
 
         var syntaxTrees = (additionalSources?.Select(x => CSharpSyntaxTree.ParseText(x)) ?? Array.Empty<SyntaxTree>())
@@ -28,8 +31,7 @@ internal static class TestHelper
 
         var generator = new T();
         GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
-
-        driver = driver.RunGenerators(compilation);
+        
         driver.RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
 
         var generatedSyntaxTrees = outputCompilation.SyntaxTrees.ToArray();
