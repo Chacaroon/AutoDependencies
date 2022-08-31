@@ -1,35 +1,46 @@
 ﻿using AutoDependencies.ConsoleApp;
-using AutoDependencies.Core;
+using AutoDependencies.Core.Constants;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 var workspaceManager = new WorkspaceManager();
 await workspaceManager.PrepareWorkspaceAsync(ConsoleConstants.AutoDependenciesServicesProjectName);
 
 var project = workspaceManager.GetProject(ConsoleConstants.AutoDependenciesServicesProjectName);
 
-var generatedServices = new List<(string, SyntaxNode)>();
+var compilation = (await project.GetCompilationAsync())!;
 
-foreach (var document in project.Documents)
-{
-    var semanticModel = (await document.GetSemanticModelAsync())!;
-    var serviceAnalyzer = new ServiceAnalyzer(semanticModel);
-    var serviceManager = new ServiceGenerator();
-    var visitor = new ServiceVisitor(serviceAnalyzer, semanticModel);
+var generator = new AutoDependencies.Generator.ServiceGenerator();
+GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
+driver.RunGeneratorsAndUpdateCompilation(compilation, out var updatedCompilation, out var diagnostics);
 
-    visitor.Visit(await document.GetSyntaxRootAsync());
-    
-    var services = visitor.ServiceNodes.Select(classDeclarationSyntax =>
+Console.WriteLine(string.Join(Environment.NewLine, diagnostics.Select(x => x.GetMessage())));
+
+var generatedFiles = updatedCompilation.SyntaxTrees
+    .Select(x =>
     {
-        var serviceToGenerateInfo = serviceAnalyzer.GetServiceToGenerateInfo(classDeclarationSyntax);
+        var classDeclarationSyntax = x.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>().FirstOrDefault();
 
-        return (
-            serviceToGenerateInfo.ServiceInfo.Name.ValueText, 
-            serviceManager.GenerateService(serviceToGenerateInfo));
-    });
-    
-    generatedServices.AddRange(services);
-}
+        if (classDeclarationSyntax == null)
+        {
+            return (null, null!);
+        }
+
+        var isGeneratedClass = classDeclarationSyntax.AttributeLists
+            .Any(x => x.Attributes.Any(x => x.Name.ToString() == "Generated"));
+
+        if (!isGeneratedClass)
+        {
+            return (null, null!);
+        }
+
+        var className = $"{classDeclarationSyntax.Identifier}{CoreConstants.GeneratedDocumentExtension}";
+        return (Name: (string?)className, Node: x.GetRoot());
+    })
+    .Where(x => x.Name != null)
+    .ToDictionary(x => x.Name!, x => x.Node);
 
 workspaceManager.AddDocuments(
-    ConsoleConstants.AutoDependenciesServicesProjectName, 
-    generatedServices.ToDictionary(x => x.Item1, x => x.Item2));
+    ConsoleConstants.AutoDependenciesServicesProjectName,
+    generatedFiles);

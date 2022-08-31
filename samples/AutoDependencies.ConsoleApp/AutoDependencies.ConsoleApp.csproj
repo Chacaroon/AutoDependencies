@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\AutoDependencies.Core\AutoDependencies.Core.csproj" />
+    <ProjectReference Include="..\..\src\AutoDependencies.Generator\AutoDependencies.Generator.csproj" />
   </ItemGroup>
 
 </Project>

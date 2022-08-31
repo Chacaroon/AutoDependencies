@@ -29,10 +29,6 @@ internal class WorkspaceManager
 
         Console.WriteLine("Remove generated files");
         RemoveDocuments(ConsoleConstants.AutoDependenciesServicesProjectName, x => x.Name.EndsWith(CoreConstants.GeneratedDocumentExtension));
-        
-        Console.WriteLine("Generate default attributes");
-        var defaultAttributes = DefaultAttributes.GetOrCreateDefaultAttributes();
-        AddDocuments(projectName, defaultAttributes);
     }
 
     public void AddDocuments(string projectName, IReadOnlyDictionary<string, SyntaxNode> nodes)
