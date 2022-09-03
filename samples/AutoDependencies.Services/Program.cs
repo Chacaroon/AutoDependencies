@@ -1,5 +1,6 @@
-﻿using AutoDependencies.Services;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+
+namespace AutoDependencies.Services;
 
 class Program
 {
@@ -13,4 +14,3 @@ class Program
         var b = a.DoSmth();
     }
 }
-

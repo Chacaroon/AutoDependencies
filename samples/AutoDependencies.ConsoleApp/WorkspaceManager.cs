@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Reflection;
-using AutoDependencies.Core.Constants;
+using AutoDependencies.Generator.Constants;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.MSBuild;
@@ -28,7 +28,7 @@ internal class WorkspaceManager
         await _workspace.OpenSolutionAsync(SolutionPath);
 
         Console.WriteLine("Remove generated files");
-        RemoveDocuments(ConsoleConstants.AutoDependenciesServicesProjectName, x => x.Name.EndsWith(CoreConstants.GeneratedDocumentExtension));
+        RemoveDocuments(ConsoleConstants.AutoDependenciesServicesProjectName, x => x.Name.EndsWith(GeneratorConstants.GeneratedDocumentExtension));
     }
 
     public void AddDocuments(string projectName, IReadOnlyDictionary<string, SyntaxNode> nodes)
@@ -56,7 +56,7 @@ internal class WorkspaceManager
             .ToArray();
 
         var documentNamesToDelete = documentsToDelete
-            .Select(x => x.Name.Replace(CoreConstants.GeneratedDocumentExtension, string.Empty))
+            .Select(x => x.Name.Replace(GeneratorConstants.GeneratedDocumentExtension, string.Empty))
             .ToArray();
 
         var documentIdsToDelete = documentsToDelete
@@ -73,9 +73,9 @@ internal class WorkspaceManager
 
     private Solution AddDocument(Solution solution, Project project, string fileName, SyntaxNode node)
     {
-        if (!fileName.EndsWith(CoreConstants.GeneratedDocumentExtension))
+        if (!fileName.EndsWith(GeneratorConstants.GeneratedDocumentExtension))
         {
-            fileName = $"{fileName.Replace(".cs", string.Empty)}{CoreConstants.GeneratedDocumentExtension}";
+            fileName = $"{fileName.Replace(".cs", string.Empty)}{GeneratorConstants.GeneratedDocumentExtension}";
         }
 
         var newSolution = solution.AddDocument(

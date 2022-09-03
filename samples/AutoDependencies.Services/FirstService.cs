@@ -10,11 +10,10 @@ internal partial class FirstService
 {
     private readonly HashSet<string> _cache;
     private readonly ISecondService _secondService;
-
     [Inject]
     public IThirdService ThirdService { get; }
 
-    public IServiceProviderFactory<string> DoSmth()
+    public IServiceProviderFactory<string>? DoSmth()
     {
         return null;
     }

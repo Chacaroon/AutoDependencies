@@ -1,9 +1,8 @@
 ﻿using System.Collections.Immutable;
 using System.Text;
-using AutoDependencies.Core;
-using AutoDependencies.Core.Constants;
-using AutoDependencies.Core.Extensions;
-using AutoDependencies.Core.Models;
+using AutoDependencies.Generator.Constants;
+using AutoDependencies.Generator.Extensions;
+using AutoDependencies.Generator.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -40,7 +39,7 @@ public class ServiceGenerator : IIncrementalGenerator
         var distinctClassDeclarations = classDeclarations.Distinct();
         var classesToGenerate = GetInfoForGenerate(compilation, distinctClassDeclarations, context.CancellationToken);
 
-        var serviceGenerator = new Core.ServiceGenerator();
+        var serviceGenerator = new ServiceFactory();
 
         foreach (var serviceInfo in classesToGenerate)
         {

@@ -15,10 +15,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\AutoDependencies.Core\AutoDependencies.Core.csproj" GeneratePathProperty="true" PrivateAssets="All" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 	</ItemGroup>
 </Project>

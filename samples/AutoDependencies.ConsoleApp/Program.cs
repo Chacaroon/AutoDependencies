@@ -1,5 +1,5 @@
 ﻿using AutoDependencies.ConsoleApp;
-using AutoDependencies.Core.Constants;
+using AutoDependencies.Generator.Constants;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -35,7 +35,7 @@ var generatedFiles = updatedCompilation.SyntaxTrees
             return (null, null!);
         }
 
-        var className = $"{classDeclarationSyntax.Identifier}{CoreConstants.GeneratedDocumentExtension}";
+        var className = $"{classDeclarationSyntax.Identifier}{GeneratorConstants.GeneratedDocumentExtension}";
         return (Name: (string?)className, Node: x.GetRoot());
     })
     .Where(x => x.Name != null)
