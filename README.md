@@ -8,10 +8,11 @@ AutoDependencies is a library designed to get rid of boilerplate code in ASP.NET
 - [x] Generate constructor with injected services and save ones to the appropriate service members
 - [x] Generate an interface with public methods of a service
 - [x] Generate code with Incremental Generatort
+- [x] Create and publish nuget packages
+- [x] Cover generator with tests 
 - [ ] Generate method that registers all generated services to the `IServiceCollection`
 - [ ] Add code analyzer with code fix
-- [ ] Cover generator and analyzer with tests
-- [ ] Create and publish nuget packages
+- [ ] Cover analyzer with tests
 
 ## Installation
 
@@ -35,10 +36,11 @@ This adds a `<PackageReference>` to your project. You can additionally mark the 
 
   <!-- Add the package -->
   <PackageReference Include="AutoDependencies.Generator" Version="0.1.0" PrivateAssets="all"/>
-  <!-- -->
 
 </Project>
 ```
+
+Adding the package will automatically add a marker attributes, such as `[Service]` and `[Inject]`, to your project.
 
 ## Usage
 
