@@ -56,6 +56,8 @@ class Build : NukeBuild
         .Before(Restore)
         .Executes(() =>
         {
+            Logger.LogLevel = LogLevel.Trace;
+
             SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
             TestsDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
             if (!string.IsNullOrEmpty(PackagesDirectory))
@@ -126,7 +128,7 @@ class Build : NukeBuild
 
             if (!string.IsNullOrEmpty(PackagesDirectory))
             {
-                DeleteDirectory(PackagesDirectory / "autofependencies.generator");
+                DeleteDirectory(PackagesDirectory / "autodependencies.generator");
             }
 
             DotNetRestore(s => s
