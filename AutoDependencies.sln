@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoDependencies.Tests", "t
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoDependencies.IntegrationTests", "tests\AutoDependencies.IntegrationTests\AutoDependencies.IntegrationTests.csproj", "{66A9DE0F-6CB5-4850-BA1F-68147EE134AB}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{FA5B5516-2278-4C51-8AA5-FC79A725F9F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,8 @@ Global
 		{66A9DE0F-6CB5-4850-BA1F-68147EE134AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66A9DE0F-6CB5-4850-BA1F-68147EE134AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66A9DE0F-6CB5-4850-BA1F-68147EE134AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA5B5516-2278-4C51-8AA5-FC79A725F9F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA5B5516-2278-4C51-8AA5-FC79A725F9F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
