@@ -137,6 +137,7 @@ class Build : NukeBuild
             DotNetRestore(s => s
                 .When(!string.IsNullOrEmpty(PackagesDirectory), x => x.SetPackageDirectory(PackagesDirectory))
                 .SetConfigFile(RootDirectory / "nuget.integration-tests.config")
+                .SetProperty(nameof(Version), Version)
                 .CombineWith(projectFiles, (s, p) => s.SetProjectFile(p)));
 
             DotNetBuild(s => s
