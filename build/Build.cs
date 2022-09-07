@@ -52,6 +52,7 @@ class Build : NukeBuild
 
     const string NugetOrgUrl = "https://api.nuget.org/v3/index.json";
     bool IsTag => GitHubActions.Instance?.Ref?.StartsWith("refs/tags/") ?? false;
+    string Version => IsTag ? GitVersion.MajorMinorPatch : "1.0.0-build";
 
     Target Clean => _ => _
         .Before(Restore)
@@ -84,7 +85,7 @@ class Build : NukeBuild
                 .SetProjectFile(Solution)
                 .SetConfiguration(Configuration)
                 .When(IsServerBuild, x => x.SetProperty("ContinuousIntegrationBuild", "true"))
-                .SetVersion(IsTag ? GitVersion.MajorMinorPatch : "1.0.0-build")
+                .SetVersion(Version)
                 .SetAssemblyVersion(GitVersion.AssemblySemVer)
                 .SetFileVersion(GitVersion.AssemblySemFileVer)
                 .EnableNoRestore());
@@ -113,7 +114,8 @@ class Build : NukeBuild
                 .EnableNoBuild()
                 .EnableNoRestore()
                 .When(IsServerBuild, x => x.SetProperty("ContinuousIntegrationBuild", "true"))
-                .SetProject(Solution));
+                .SetProject(Solution)
+                .SetVersion(Version));
         });
 
     Target TestPackage => _ => _
