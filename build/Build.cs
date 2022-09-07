@@ -20,6 +20,7 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 [GitHubActions("BuildAndPublish",
     GitHubActionsImage.UbuntuLatest,
     AutoGenerate = true,
+    FetchDepth = 0,
     OnPushTags = new[] { "*" },
     OnPushBranches = new[] { "master", "main" },
     OnPullRequestBranches = new[] { "*" },
