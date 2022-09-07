@@ -21,11 +21,11 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
     GitHubActionsImage.WindowsLatest,
     GitHubActionsImage.MacOsLatest,
     EnableGitHubToken = true,
-    CacheExcludePatterns = new[] { "~/.nuget/packages/autodependencies" },
+    CacheExcludePatterns = new[] { "~/.nuget/packages/autodependencies.generator" },
     OnPushTags = new[] { "*" },
     OnPushBranches = new[] { "master", "main" },
     OnPullRequestBranches = new[] { "*" },
-    AutoGenerate = false,
+    AutoGenerate = true,
     ImportSecrets = new[] { nameof(NuGetToken) },
     InvokedTargets = new[] { nameof(Clean), nameof(Test), nameof(TestPackage), nameof(PushToNuGet) }
 )]
@@ -48,7 +48,7 @@ class Build : NukeBuild
     AbsolutePath TestsDirectory => RootDirectory / "tests";
     AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
     
-    [Parameter] readonly string NuGetToken;
+    [Parameter, Secret] readonly string NuGetToken;
     [Parameter] readonly AbsolutePath PackagesDirectory = RootDirectory / "packages";
     [GitVersion] readonly GitVersion GitVersion;
 
@@ -129,7 +129,7 @@ class Build : NukeBuild
 
             if (!string.IsNullOrEmpty(PackagesDirectory))
             {
-                DeleteDirectory(PackagesDirectory / "autodependencies");
+                DeleteDirectory(PackagesDirectory / "autodependencies.generator");
             }
 
             DotNetRestore(s => s

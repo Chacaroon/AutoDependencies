@@ -48,7 +48,8 @@
           "description": "Disables displaying the NUKE logo"
         },
         "NuGetToken": {
-          "type": "string"
+          "type": "string",
+          "default": "Secrets must be entered via 'nuke :secrets [profile]'"
         },
         "PackagesDirectory": {
           "type": "string"
