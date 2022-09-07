@@ -15,7 +15,30 @@ AutoDependencies is a library designed to get rid of boilerplate code in ASP.NET
 
 ## Installation
 
-TODO: Will be described after publishing packages to NuGet
+Add the package to your application using
+
+```shell
+Install-Package AutoDependencies.Generator
+```
+
+
+This adds a `<PackageReference>` to your project. You can additionally mark the package as `PrivateAssets="all"`.
+
+> Setting `PrivateAssets="all"` means any projects referencing this one won't get a reference to the _AutoDependencies.Generator_ package.
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <!-- Add the package -->
+  <PackageReference Include="AutoDependencies.Generator" Version="0.1.0" PrivateAssets="all"/>
+  <!-- -->
+
+</Project>
+```
 
 ## Usage
 
