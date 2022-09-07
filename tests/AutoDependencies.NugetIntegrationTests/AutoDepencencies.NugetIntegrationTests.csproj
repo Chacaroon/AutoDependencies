@@ -4,12 +4,11 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AutoDependencies.Generator" Version="$(Version)" PrivateAssets="All" />
+		<PackageReference Include="AutoDependencies.Generator" ExcludeAssets="compile;runtime" Version="$(Version)" PrivateAssets="All" />
 	</ItemGroup>
 
 	<ItemGroup>
