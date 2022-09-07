@@ -160,14 +160,12 @@ class Build : NukeBuild
         .After(TestPackage)
         .Executes(() =>
         {
-            Log.Information("Push to NuGet! Version = {Version}", GitVersion.MajorMinorPatch);
-
-            //var packages = ArtifactsDirectory.GlobFiles("*.nupkg");
-            //DotNetNuGetPush(s => s
-            //    .SetApiKey(NuGetToken)
-            //    .SetSource(NugetOrgUrl)
-            //    .EnableSkipDuplicate()
-            //    .CombineWith(packages, (x, package) => x
-            //        .SetTargetPath(package)));
+            var packages = ArtifactsDirectory.GlobFiles("*.nupkg");
+            DotNetNuGetPush(s => s
+                .SetApiKey(NuGetToken)
+                .SetSource(NugetOrgUrl)
+                .EnableSkipDuplicate()
+                .CombineWith(packages, (x, package) => x
+                    .SetTargetPath(package)));
         });
 }
