@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AutoDependencies.Generator" ExcludeAssets="compile;runtime" Version="$(Version)" PrivateAssets="All" />
+		<PackageReference Include="AutoDependencies.Generator" ExcludeAssets="compile;runtime" Version="1.0.0-build" PrivateAssets="All" />
 	</ItemGroup>
 
 	<ItemGroup>
