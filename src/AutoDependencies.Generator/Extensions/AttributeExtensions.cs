@@ -8,7 +8,8 @@ internal static class AttributeExtensions
     public static bool HasAttribute(
         this MemberDeclarationSyntax syntax, 
         string attributeName, 
-        SemanticModel semanticModel)
+        SemanticModel semanticModel,
+        CancellationToken cancellationToken = default)
     {
         foreach (var attributeList in syntax.AttributeLists)
         {
@@ -22,7 +23,7 @@ internal static class AttributeExtensions
                 }
 
                 var attributeFullName = semanticModel
-                    .GetTypeInfo(attributeSyntax)
+                    .GetTypeInfo(attributeSyntax, cancellationToken)
                     .Type!
                     .ToDisplayString();
 
@@ -38,8 +39,8 @@ internal static class AttributeExtensions
 
     public static string ToAttributeFullName(this string attributeName)
     {
-        return !attributeName.StartsWith(Constants.GeneratorConstants.AttributesNamespace) 
-            ? $"{Constants.GeneratorConstants.AttributesNamespace}.{attributeName}" 
+        return !attributeName.StartsWith(GeneratorConstants.PredefinedNamespaces.AttributesNamespace) 
+            ? $"{GeneratorConstants.PredefinedNamespaces.AttributesNamespace}.{attributeName}" 
             : attributeName;
     }
 }

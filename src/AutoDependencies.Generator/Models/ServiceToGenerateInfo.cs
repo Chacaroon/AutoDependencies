@@ -3,4 +3,5 @@
 public record ServiceToGenerateInfo(
     ServiceInfo ServiceInfo,
     InterfaceMemberInfo[] InterfaceMembers,
-    ConstructorMemberInfo[] ConstructorMembers);
+    ConstructorMemberInfo[] ConstructorMembers,
+    bool nullableEnabled);

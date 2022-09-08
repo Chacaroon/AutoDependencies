@@ -2,7 +2,6 @@
 using System.Reflection;
 using AutoDependencies.Generator.Constants;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.MSBuild;
 
 namespace AutoDependencies.ConsoleApp;

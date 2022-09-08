@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoDependencies.Generator;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 
 namespace AutoDependencies.Tests.Helpers;
 public abstract class SnapshotTestsBase<TGenerator> where TGenerator : IIncrementalGenerator, new()
@@ -20,9 +14,9 @@ internal partial class TestService {
     {members}
 }";
 
-    protected SettingsTask Verify(string source, string[]? additionalSources = null)
+    protected SettingsTask Verify(string source, string[]? additionalSources = null, NullableContextOptions nullableContextOptions = NullableContextOptions.Disable)
     {
-        var (output, diagnostics) = TestHelper.GetGeneratedOutput<TGenerator>(source, additionalSources);
+        var (output, diagnostics) = TestHelper.GetGeneratedOutput<TGenerator>(source, additionalSources, nullableContextOptions);
 
         Assert.Empty(diagnostics);
 

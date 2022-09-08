@@ -1,16 +1,15 @@
 ﻿using AutoDependencies.Generator.Constants;
-using AutoDependencies.Generator.Factories;
 using AutoDependencies.Generator.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace AutoDependencies.Generator;
-public class ServiceFactory
+namespace AutoDependencies.Generator.SyntaxFactories;
+public static class ServiceSyntaxFactory
 {
-    public SyntaxNode GenerateService(ServiceToGenerateInfo serviceToGenerateInfo)
+    public static SyntaxNode GenerateService(ServiceToGenerateInfo serviceToGenerateInfo)
     {
-        var (serviceInfo, interfaceMembersInfo, constructorMembersInfo) = serviceToGenerateInfo;
+        var (serviceInfo, interfaceMembersInfo, constructorMembersInfo, nullableEnabled) = serviceToGenerateInfo;
 
         var interfaceDeclaration = InterfaceSyntaxFactory.CreateInterfaceDeclarationSyntax(serviceInfo.InterfaceName, interfaceMembersInfo);
         var constructorDeclarationSyntax = ConstructorSyntaxFactory.CreateConstructor(serviceInfo, constructorMembersInfo);
@@ -18,17 +17,22 @@ public class ServiceFactory
         var classDeclaration = ClassSyntaxFactory.GeneratePartialClassService(serviceInfo, constructorDeclarationSyntax);
 
         var namespaceDeclaration = NamespaceSyntaxFactory.CreateNamespace(
-            serviceInfo.Namespace, 
+            serviceInfo.Namespace,
             new MemberDeclarationSyntax[] { classDeclaration, interfaceDeclaration });
 
-        var root = SyntaxFactory.CompilationUnit()
-            .WithMembers(SyntaxFactory.List(new MemberDeclarationSyntax[]
+        if (nullableEnabled)
+        {
+            namespaceDeclaration = namespaceDeclaration.WithLeadingTrivia(Trivia(NullableDirectiveTrivia(Token(SyntaxKind.EnableKeyword), true)));
+        }
+
+        var root = CompilationUnit()
+            .WithMembers(List(new MemberDeclarationSyntax[]
             {
                 namespaceDeclaration
             }))
             .WithUsings(UsingSyntaxFactory.CreateUsingDirectiveList(new[]
             {
-                Constants.GeneratorConstants.AttributesNamespace
+                GeneratorConstants.PredefinedNamespaces.AttributesNamespace
             }));
 
         return root.NormalizeWhitespace();

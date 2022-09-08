@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace AutoDependencies.Generator.Factories;
+namespace AutoDependencies.Generator.SyntaxFactories;
 public static class AttributeSyntaxFactory
 {
     private static readonly ConcurrentDictionary<string, AttributeSyntax> Attributes = new();
@@ -18,28 +18,28 @@ public static class AttributeSyntaxFactory
     {
         var attributeUsageAttributeList = CreateAttributeUsageAttributeListsDeclarationSyntax(attributeTargets);
 
-        var attributeClassDeclaration = SyntaxFactory.ClassDeclaration(attributeName)
-            .WithBaseList(SyntaxFactory.BaseList(SyntaxFactory.SeparatedList(new BaseTypeSyntax[]
+        var attributeClassDeclaration = ClassDeclaration(attributeName)
+            .WithBaseList(BaseList(SeparatedList(new BaseTypeSyntax[]
             {
-                SyntaxFactory.SimpleBaseType(SyntaxFactory.IdentifierName(nameof(Attribute)))
+                SimpleBaseType(IdentifierName(nameof(Attribute)))
             })))
             .WithAttributeLists(
-                SyntaxFactory.List(new[]
+                List(new[]
                 {
-                    GetOrCreateAttributeListSyntax(Constants.GeneratorConstants.GeneratedAttributeName),
+                    GetOrCreateAttributeListSyntax(GeneratorConstants.AttributeNames.GeneratedAttribute),
                     attributeUsageAttributeList
                 }));
 
         var namespaceDeclaration = NamespaceSyntaxFactory.CreateNamespace(namespaceName, new[] { attributeClassDeclaration });
 
-        var root = SyntaxFactory.CompilationUnit()
-            .WithMembers(SyntaxFactory.List(new MemberDeclarationSyntax[]
+        var root = CompilationUnit()
+            .WithMembers(List(new MemberDeclarationSyntax[]
             {
                 namespaceDeclaration
             }))
-            .WithUsings(SyntaxFactory.List(new[]
+            .WithUsings(List(new[]
             {
-                SyntaxFactory.UsingDirective(SyntaxFactory.IdentifierName(nameof(System))),
+                UsingDirective(IdentifierName(nameof(System))),
             }))
             .NormalizeWhitespace();
 
@@ -54,9 +54,9 @@ public static class AttributeSyntaxFactory
             return attributeSyntax;
         }
 
-        var identifier = SyntaxFactory.IdentifierName(attributeName);
+        var identifier = IdentifierName(attributeName);
 
-        return Attributes[attributeName] = SyntaxFactory.Attribute(identifier);
+        return Attributes[attributeName] = Attribute(identifier);
     }
 
     public static AttributeListSyntax GetOrCreateAttributeListSyntax(string attributeName)
@@ -67,7 +67,7 @@ public static class AttributeSyntaxFactory
             return attributeListSyntax;
         }
 
-        return AttributeLists[attributeName] = SyntaxFactory.AttributeList(SyntaxFactory.SeparatedList(new[]
+        return AttributeLists[attributeName] = AttributeList(SeparatedList(new[]
         {
             GetOrCreateAttributeSyntax(attributeName)
         }));
@@ -82,21 +82,21 @@ public static class AttributeSyntaxFactory
         
         var attributeUsageParam = attributeTargets.Skip(1).Aggregate(
             CreateAttributeTargetExpression(attributeTargets[0]),
-            (syntax, targets) => SyntaxFactory.BinaryExpression(
+            (syntax, targets) => BinaryExpression(
                 SyntaxKind.BitwiseOrExpression,
                 syntax,
                 CreateAttributeTargetExpression(targets)));
 
-        var arguments = SyntaxFactory.AttributeArgumentList(
-            SyntaxFactory.SeparatedList(new[]
+        var arguments = AttributeArgumentList(
+            SeparatedList(new[]
             {
-                SyntaxFactory.AttributeArgument(attributeUsageParam)
+                AttributeArgument(attributeUsageParam)
             }));
 
         var attributeUsageAttribute = GetOrCreateAttributeSyntax(nameof(AttributeUsageAttribute))
             .WithArgumentList(arguments);
 
-        return SyntaxFactory.AttributeList(SyntaxFactory.SeparatedList(new[]
+        return AttributeList(SeparatedList(new[]
         {
             attributeUsageAttribute
         }));
@@ -104,10 +104,10 @@ public static class AttributeSyntaxFactory
 
     private static ExpressionSyntax CreateAttributeTargetExpression(AttributeTargets attributeTargets)
     {
-        return SyntaxFactory.MemberAccessExpression(
+        return MemberAccessExpression(
             SyntaxKind.SimpleMemberAccessExpression,
-            SyntaxFactory.IdentifierName(nameof(AttributeTargets)),
-            SyntaxFactory.IdentifierName(attributeTargets.ToString()));
+            IdentifierName(nameof(AttributeTargets)),
+            IdentifierName(attributeTargets.ToString()));
     }
 
     private static string NormalizeAttributeName(string attributeName)

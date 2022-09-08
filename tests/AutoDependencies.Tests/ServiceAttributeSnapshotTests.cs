@@ -1,10 +1,5 @@
-﻿using AutoDependencies.Tests.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoDependencies.Generator;
+﻿using AutoDependencies.Generator;
+using AutoDependencies.Tests.Helpers;
 
 namespace AutoDependencies.Tests;
 

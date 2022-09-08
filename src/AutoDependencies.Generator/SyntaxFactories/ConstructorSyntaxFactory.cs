@@ -3,7 +3,7 @@ using AutoDependencies.Generator.Models;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace AutoDependencies.Generator.Factories;
+namespace AutoDependencies.Generator.SyntaxFactories;
 internal class ConstructorSyntaxFactory
 {
     private static readonly Regex UnderscoreRegex = new("^_", RegexOptions.Compiled);
@@ -13,10 +13,10 @@ internal class ConstructorSyntaxFactory
         ConstructorMemberInfo[] constructorMembersInfo)
     {
         var parameters = CreateConstructorParameters(constructorMembersInfo);
-        var body = SyntaxFactory.Block(CreateAssignmentStatements(constructorMembersInfo));
+        var body = Block(CreateAssignmentStatements(constructorMembersInfo));
 
-        var constructorDeclaration = SyntaxFactory.ConstructorDeclaration(serviceInfo.Name)
-            .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword)))
+        var constructorDeclaration = ConstructorDeclaration(serviceInfo.Name)
+            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
             .WithParameterList(parameters)
             .WithBody(body);
 
@@ -27,28 +27,27 @@ internal class ConstructorSyntaxFactory
     {
         if (constructorMembersInfo.Length == 0)
         {
-            return SyntaxFactory.ParameterList();
+            return ParameterList();
         }
 
         var parameters = constructorMembersInfo
             .Select(x => (x.Type, Name: NormalizeMemberName(x.Name)))
-            .Select(x => SyntaxFactory
-                .Parameter(SyntaxFactory.Identifier(x.Name))
+            .Select(x => Parameter(Identifier(x.Name))
                 .WithType(x.Type))
             .ToArray();
         
 
-        return SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList(parameters));
+        return ParameterList(SeparatedList(parameters));
     }
 
     private static StatementSyntax[] CreateAssignmentStatements(ConstructorMemberInfo[] constructorMembersInfo)
     {
         var expressionStatements = constructorMembersInfo
-            .Select(x => SyntaxFactory.AssignmentExpression(
+            .Select(x => AssignmentExpression(
                 SyntaxKind.SimpleAssignmentExpression,
-                SyntaxFactory.IdentifierName(x.Name),
-                SyntaxFactory.IdentifierName(NormalizeMemberName(x.Name))))
-            .Select(SyntaxFactory.ExpressionStatement)
+                IdentifierName(x.Name),
+                IdentifierName(NormalizeMemberName(x.Name))))
+            .Select(ExpressionStatement)
             .Cast<StatementSyntax>()
             .ToArray();
 
