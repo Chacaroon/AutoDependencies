@@ -12,7 +12,7 @@ public static class StringExtensions
 
         if (name.EndsWith(".cs"))
         {
-            name = name.Replace(".cs", string.Empty);
+            return name.Replace(".cs", GeneratorConstants.GeneratedDocumentExtension);
         }
 
         return $"{name}{GeneratorConstants.GeneratedDocumentExtension}";

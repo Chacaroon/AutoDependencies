@@ -1,9 +1,11 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Text;
 using AutoDependencies.Generator.Collectors;
 using AutoDependencies.Generator.Constants;
 using AutoDependencies.Generator.Extensions;
 using AutoDependencies.Generator.Models;
+using AutoDependencies.Generator.SyntaxFactories;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -42,12 +44,10 @@ public class ServiceGenerator : IIncrementalGenerator
 
         var distinctClassDeclarations = classDeclarations.Distinct().ToArray();
         var classesToGenerate = GetInfoForGenerate(compilation, distinctClassDeclarations, context.CancellationToken);
-
-        var serviceGenerator = new ServiceSyntaxFactory();
-
+        
         foreach (var serviceInfo in classesToGenerate)
         {
-            var generatedService = serviceGenerator.GenerateService(serviceInfo).GetText(Encoding.UTF8);
+            var generatedService = ServiceSyntaxFactory.GenerateService(serviceInfo).GetText(Encoding.UTF8);
             var fileName = serviceInfo.ServiceInfo.Name.ValueText.ToGeneratedFileName();
             
             context.AddSource(fileName, generatedService);
@@ -66,9 +66,9 @@ public class ServiceGenerator : IIncrementalGenerator
             cancellationToken.ThrowIfCancellationRequested();
 
             var semanticModel = compilation.GetSemanticModel(classDeclarationSyntax.SyntaxTree);
+            var nullableEnabled = compilation.Options.NullableContextOptions == NullableContextOptions.Enable;
 
-            var serviceAnalyzer = new ServiceCollector(semanticModel);
-            var serviceToGenerateInfo = serviceAnalyzer.GetServiceToGenerateInfo(classDeclarationSyntax);
+            var serviceToGenerateInfo = ServiceCollector.GetServiceToGenerateInfo(classDeclarationSyntax, semanticModel, nullableEnabled);
 
             servicesToGenerate.Add(serviceToGenerateInfo);
         }

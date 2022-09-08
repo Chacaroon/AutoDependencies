@@ -12,7 +12,7 @@ internal static class TypeSyntaxExtensions
 
         if (typeSymbol == null)
         {
-            return SyntaxFactory.IdentifierName(typeSyntax.ToFullString().Trim());
+            return IdentifierName(typeSyntax.ToFullString().Trim());
         }
 
         if (typeSyntax is NullableTypeSyntax)
@@ -22,6 +22,6 @@ internal static class TypeSyntaxExtensions
 
         var typeFullName = typeSymbol.ToDisplayString();
 
-        return SyntaxFactory.IdentifierName(typeFullName);
+        return IdentifierName(typeFullName);
     } 
 }

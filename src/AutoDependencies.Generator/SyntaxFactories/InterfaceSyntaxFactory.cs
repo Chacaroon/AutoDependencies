@@ -11,12 +11,12 @@ internal static class InterfaceSyntaxFactory
         string interfaceName,
         InterfaceMemberInfo[] interfaceMembersInfo)
     {
-        var interfaceDeclaration = SyntaxFactory.InterfaceDeclaration(interfaceName)
-            .WithAttributeLists(SyntaxFactory.List(new[]
+        var interfaceDeclaration = InterfaceDeclaration(interfaceName)
+            .WithAttributeLists(List(new[]
             {
                 AttributeSyntaxFactory.GetOrCreateAttributeListSyntax(GeneratorConstants.AttributeNames.GeneratedAttribute)
             }))
-            .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword)))
+            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
             .WithMembers(CreateInterfaceMembers(interfaceMembersInfo));
 
         return interfaceDeclaration;
@@ -26,13 +26,13 @@ internal static class InterfaceSyntaxFactory
         InterfaceMemberInfo[] interfaceMembersInfo)
     {
         var members = interfaceMembersInfo
-            .Select(x => SyntaxFactory.MethodDeclaration(x.ReturnType, x.Name)
-                .WithModifiers(SyntaxFactory.TokenList())
+            .Select(x => MethodDeclaration(x.ReturnType, x.Name)
+                .WithModifiers(TokenList())
                 .WithBody(null)
-                .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)))
+                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)))
             .Cast<MemberDeclarationSyntax>()
             .ToArray();
 
-        return SyntaxFactory.List(members);
+        return List(members);
     }
 }

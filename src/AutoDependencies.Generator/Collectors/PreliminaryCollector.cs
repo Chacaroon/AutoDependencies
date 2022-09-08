@@ -2,9 +2,6 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using AutoDependencies.Generator.Extensions;
 
 namespace AutoDependencies.Generator.Collectors;

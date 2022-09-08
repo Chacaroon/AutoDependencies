@@ -6,10 +6,10 @@ internal static class NamespaceSyntaxFactory
 {
     public static NamespaceDeclarationSyntax CreateNamespace(string namespaceName, IEnumerable<MemberDeclarationSyntax>? members = null)
     {
-        var namespaceIdentifier = SyntaxFactory.IdentifierName(SyntaxFactory.Identifier(namespaceName));
+        var namespaceIdentifier = IdentifierName(Identifier(namespaceName));
 
-        var namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(namespaceIdentifier)
-            .WithMembers(SyntaxFactory.List(members ?? Array.Empty<MemberDeclarationSyntax>()));
+        var namespaceDeclaration = NamespaceDeclaration(namespaceIdentifier)
+            .WithMembers(List(members ?? Array.Empty<MemberDeclarationSyntax>()));
 
         return namespaceDeclaration;
     }

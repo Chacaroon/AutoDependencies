@@ -8,9 +8,9 @@ internal class UsingSyntaxFactory
     public static SyntaxList<UsingDirectiveSyntax> CreateUsingDirectiveList(string[] namespaces)
     {
         var usingDirectives = namespaces
-            .Select(x => SyntaxFactory.UsingDirective(SyntaxFactory.IdentifierName(x)))
+            .Select(x => UsingDirective(IdentifierName(x)))
             .ToArray();
 
-        return SyntaxFactory.List(usingDirectives);
+        return List(usingDirectives);
     }
 }

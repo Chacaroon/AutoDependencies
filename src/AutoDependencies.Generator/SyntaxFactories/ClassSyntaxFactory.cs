@@ -10,20 +10,20 @@ internal static class ClassSyntaxFactory
         ServiceInfo serviceInfo,
         ConstructorDeclarationSyntax constructor)
     {
-        var interfaceIdentifier = SyntaxFactory.IdentifierName(serviceInfo.InterfaceName);
-        var interfaceList = SyntaxFactory.BaseList(SyntaxFactory.SeparatedList(new BaseTypeSyntax[]
+        var interfaceIdentifier = IdentifierName(serviceInfo.InterfaceName);
+        var interfaceList = BaseList(SeparatedList(new BaseTypeSyntax[]
         {
-            SyntaxFactory.SimpleBaseType(interfaceIdentifier)
+            SimpleBaseType(interfaceIdentifier)
         }));
         
-        var classDeclaration = SyntaxFactory.ClassDeclaration(serviceInfo.Name)
-            .WithAttributeLists(SyntaxFactory.List(new[]
+        var classDeclaration = ClassDeclaration(serviceInfo.Name)
+            .WithAttributeLists(List(new[]
             {
                 AttributeSyntaxFactory.GetOrCreateAttributeListSyntax(GeneratorConstants.AttributeNames.GeneratedAttribute)
             }))
             .WithModifiers(serviceInfo.Modifiers)
             .WithBaseList(interfaceList)
-            .WithMembers(SyntaxFactory.List(new MemberDeclarationSyntax[]
+            .WithMembers(List(new MemberDeclarationSyntax[]
             {
                 constructor
             }));
