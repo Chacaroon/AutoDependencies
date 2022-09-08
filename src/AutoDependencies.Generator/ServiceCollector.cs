@@ -6,39 +6,15 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AutoDependencies.Generator;
-public class ServiceAnalyzer
+public class ServiceCollector
 {
     private readonly SemanticModel _semanticModel;
 
-    private static readonly SyntaxKind[] ForbiddenModifiers = {
-        SyntaxKind.StaticKeyword,
-        SyntaxKind.AbstractKeyword
-    };
-
-    public ServiceAnalyzer(SemanticModel semanticModel)
+    public ServiceCollector(SemanticModel semanticModel)
     {
         _semanticModel = semanticModel;
     }
 
-    public static bool IsCandidateForGeneration(SyntaxNode node)
-    {
-        return node is ClassDeclarationSyntax { AttributeLists.Count: > 0 };
-    }
-
-    public static bool IsApplicableForSourceGeneration(ClassDeclarationSyntax node, SemanticModel semanticModel)
-    {
-        if (!node.Modifiers.Any(SyntaxKind.PartialKeyword))
-        {
-            return false;
-        }
-
-        if (ForbiddenModifiers.Any(x => node.Modifiers.Any(x)))
-        {
-            return false;
-        }
-
-        return node.HasAttribute(Constants.GeneratorConstants.ServiceAttributeName, semanticModel);
-    }
 
     public ServiceToGenerateInfo GetServiceToGenerateInfo(ClassDeclarationSyntax classDeclarationSyntax)
     {
@@ -116,7 +92,7 @@ public class ServiceAnalyzer
             return true;
         }
 
-        return memberDeclarationSyntax.HasAttribute(Constants.GeneratorConstants.InjectAttributeName, _semanticModel);
+        return memberDeclarationSyntax.HasAttribute(GeneratorConstants.AttributeNames.InjectAttribute, _semanticModel);
     }
 
     private ConstructorMemberInfo CreateConstructorMemberInfo(SyntaxToken identifier, TypeSyntax type)

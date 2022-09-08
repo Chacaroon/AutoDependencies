@@ -5,7 +5,7 @@ public static class StringExtensions
 {
     public static string ToGeneratedFileName(this string name)
     {
-        if (name.EndsWith(Constants.GeneratorConstants.GeneratedDocumentExtension))
+        if (name.EndsWith(GeneratorConstants.GeneratedDocumentExtension))
         {
             return name;
         }
@@ -15,6 +15,6 @@ public static class StringExtensions
             name = name.Replace(".cs", string.Empty);
         }
 
-        return $"{name}{Constants.GeneratorConstants.GeneratedDocumentExtension}";
+        return $"{name}{GeneratorConstants.GeneratedDocumentExtension}";
     }
 }

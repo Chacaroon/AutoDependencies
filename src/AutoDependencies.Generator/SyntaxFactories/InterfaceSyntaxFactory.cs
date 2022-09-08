@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace AutoDependencies.Generator.Factories;
+namespace AutoDependencies.Generator.SyntaxFactories;
 internal static class InterfaceSyntaxFactory
 {
     public static InterfaceDeclarationSyntax CreateInterfaceDeclarationSyntax(
@@ -14,7 +14,7 @@ internal static class InterfaceSyntaxFactory
         var interfaceDeclaration = SyntaxFactory.InterfaceDeclaration(interfaceName)
             .WithAttributeLists(SyntaxFactory.List(new[]
             {
-                AttributeSyntaxFactory.GetOrCreateAttributeListSyntax(Constants.GeneratorConstants.GeneratedAttributeName)
+                AttributeSyntaxFactory.GetOrCreateAttributeListSyntax(GeneratorConstants.AttributeNames.GeneratedAttribute)
             }))
             .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword)))
             .WithMembers(CreateInterfaceMembers(interfaceMembersInfo));

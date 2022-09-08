@@ -3,7 +3,7 @@ using AutoDependencies.Generator.Models;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace AutoDependencies.Generator.Factories;
+namespace AutoDependencies.Generator.SyntaxFactories;
 internal static class ClassSyntaxFactory
 {
     public static ClassDeclarationSyntax GeneratePartialClassService(
@@ -19,7 +19,7 @@ internal static class ClassSyntaxFactory
         var classDeclaration = SyntaxFactory.ClassDeclaration(serviceInfo.Name)
             .WithAttributeLists(SyntaxFactory.List(new[]
             {
-                AttributeSyntaxFactory.GetOrCreateAttributeListSyntax(Constants.GeneratorConstants.GeneratedAttributeName)
+                AttributeSyntaxFactory.GetOrCreateAttributeListSyntax(GeneratorConstants.AttributeNames.GeneratedAttribute)
             }))
             .WithModifiers(serviceInfo.Modifiers)
             .WithBaseList(interfaceList)

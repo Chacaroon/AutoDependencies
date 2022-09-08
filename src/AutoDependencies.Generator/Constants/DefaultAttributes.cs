@@ -1,14 +1,14 @@
 ﻿using System.Collections.Concurrent;
-using AutoDependencies.Generator.Factories;
+using AutoDependencies.Generator.SyntaxFactories;
 using Microsoft.CodeAnalysis;
 
 namespace AutoDependencies.Generator.Constants;
 public static class DefaultAttributes
 {
     private static readonly (string Name, AttributeTargets[] Targets)[] DefaultAttributeNames = {
-        (GeneratorConstants.GeneratedAttributeName, new[] { AttributeTargets.Interface, AttributeTargets.Class }),
-        (GeneratorConstants.InjectAttributeName, new[] { AttributeTargets.Property, AttributeTargets.Field}),
-        (GeneratorConstants.ServiceAttributeName, new[] { AttributeTargets.Class })
+        (GeneratorConstants.AttributeNames.GeneratedAttribute, new[] { AttributeTargets.Interface, AttributeTargets.Class }),
+        (GeneratorConstants.AttributeNames.InjectAttribute, new[] { AttributeTargets.Property, AttributeTargets.Field}),
+        (GeneratorConstants.AttributeNames.ServiceAttribute, new[] { AttributeTargets.Class })
 
     };
     private static readonly ConcurrentDictionary<string, SyntaxNode> AttributeDeclarations = new();
@@ -32,7 +32,7 @@ public static class DefaultAttributes
             var attributeDeclarationSyntax = AttributeSyntaxFactory.GetOrCreateAttributeDeclarationSyntax(
                 name,
                 targets,
-                GeneratorConstants.AttributesNamespace);
+                GeneratorConstants.PredefinedNamespaces.AttributesNamespace);
 
             AttributeDeclarations[name] = attributeDeclarationSyntax;
         }

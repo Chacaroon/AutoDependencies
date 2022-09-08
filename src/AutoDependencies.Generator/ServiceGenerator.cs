@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Text;
+using AutoDependencies.Generator.Collectors;
 using AutoDependencies.Generator.Constants;
 using AutoDependencies.Generator.Extensions;
 using AutoDependencies.Generator.Models;
@@ -16,13 +17,16 @@ public class ServiceGenerator : IIncrementalGenerator
         context.RegisterPostInitializationOutput(GenerateDefaultAttributes);
 
         IncrementalValuesProvider<ClassDeclarationSyntax> classDeclarations = context.SyntaxProvider.CreateSyntaxProvider(
-            (node, _) => ServiceAnalyzer.IsCandidateForGeneration(node),
-            (ctx, _) =>
-                ServiceAnalyzer.IsApplicableForSourceGeneration((ClassDeclarationSyntax)ctx.Node, ctx.SemanticModel)
-                ? (ClassDeclarationSyntax)ctx.Node
-                : null)
+            (node, _) => PreliminaryCollector.IsCandidateForGeneration(node),
+            (ctx, cancellationToken) =>
+            {
+                var node = (ClassDeclarationSyntax)ctx.Node;
+                
+                return PreliminaryCollector.IsApplicableForSourceGeneration(node, ctx.SemanticModel, cancellationToken)
+                    ? node
+                    : null;
+            })
             .Where(x => x is not null)!;
-
         var compilationsAndClassDeclarations = context.CompilationProvider.Combine(classDeclarations.Collect());
 
         context.RegisterSourceOutput(compilationsAndClassDeclarations,
@@ -36,10 +40,10 @@ public class ServiceGenerator : IIncrementalGenerator
             return;
         }
 
-        var distinctClassDeclarations = classDeclarations.Distinct();
+        var distinctClassDeclarations = classDeclarations.Distinct().ToArray();
         var classesToGenerate = GetInfoForGenerate(compilation, distinctClassDeclarations, context.CancellationToken);
 
-        var serviceGenerator = new ServiceFactory();
+        var serviceGenerator = new ServiceSyntaxFactory();
 
         foreach (var serviceInfo in classesToGenerate)
         {
@@ -52,10 +56,10 @@ public class ServiceGenerator : IIncrementalGenerator
 
     private static List<ServiceToGenerateInfo> GetInfoForGenerate(
         Compilation compilation, 
-        IEnumerable<ClassDeclarationSyntax> classDeclarations, 
+        ClassDeclarationSyntax[] classDeclarations, 
         CancellationToken cancellationToken)
     {
-        var servicesToGenerate = new List<ServiceToGenerateInfo>(classDeclarations.Count());
+        var servicesToGenerate = new List<ServiceToGenerateInfo>(classDeclarations.Length);
 
         foreach (var classDeclarationSyntax in classDeclarations)
         {
@@ -63,7 +67,7 @@ public class ServiceGenerator : IIncrementalGenerator
 
             var semanticModel = compilation.GetSemanticModel(classDeclarationSyntax.SyntaxTree);
 
-            var serviceAnalyzer = new ServiceAnalyzer(semanticModel);
+            var serviceAnalyzer = new ServiceCollector(semanticModel);
             var serviceToGenerateInfo = serviceAnalyzer.GetServiceToGenerateInfo(classDeclarationSyntax);
 
             servicesToGenerate.Add(serviceToGenerateInfo);

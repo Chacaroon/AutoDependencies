@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace AutoDependencies.Generator.Factories;
+namespace AutoDependencies.Generator.SyntaxFactories;
 public static class AttributeSyntaxFactory
 {
     private static readonly ConcurrentDictionary<string, AttributeSyntax> Attributes = new();
@@ -26,7 +26,7 @@ public static class AttributeSyntaxFactory
             .WithAttributeLists(
                 SyntaxFactory.List(new[]
                 {
-                    GetOrCreateAttributeListSyntax(Constants.GeneratorConstants.GeneratedAttributeName),
+                    GetOrCreateAttributeListSyntax(GeneratorConstants.AttributeNames.GeneratedAttribute),
                     attributeUsageAttributeList
                 }));
 

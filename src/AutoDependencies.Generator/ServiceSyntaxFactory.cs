@@ -1,12 +1,12 @@
 ﻿using AutoDependencies.Generator.Constants;
-using AutoDependencies.Generator.Factories;
 using AutoDependencies.Generator.Models;
+using AutoDependencies.Generator.SyntaxFactories;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AutoDependencies.Generator;
-public class ServiceFactory
+public class ServiceSyntaxFactory
 {
     public SyntaxNode GenerateService(ServiceToGenerateInfo serviceToGenerateInfo)
     {
@@ -28,7 +28,7 @@ public class ServiceFactory
             }))
             .WithUsings(UsingSyntaxFactory.CreateUsingDirectiveList(new[]
             {
-                Constants.GeneratorConstants.AttributesNamespace
+                GeneratorConstants.PredefinedNamespaces.AttributesNamespace
             }));
 
         return root.NormalizeWhitespace();

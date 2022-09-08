@@ -1,4 +1,5 @@
 ﻿using AutoDependencies.ConsoleApp;
+using AutoDependencies.Generator;
 using AutoDependencies.Generator.Constants;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -11,7 +12,7 @@ var project = workspaceManager.GetProject(ConsoleConstants.AutoDependenciesServi
 
 var compilation = (await project.GetCompilationAsync())!;
 
-var generator = new AutoDependencies.Generator.ServiceGenerator();
+var generator = new ServiceGenerator();
 GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
 driver.RunGeneratorsAndUpdateCompilation(compilation, out var updatedCompilation, out var diagnostics);
 

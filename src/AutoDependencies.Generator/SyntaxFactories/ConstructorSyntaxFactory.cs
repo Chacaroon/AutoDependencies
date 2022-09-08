@@ -3,7 +3,7 @@ using AutoDependencies.Generator.Models;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace AutoDependencies.Generator.Factories;
+namespace AutoDependencies.Generator.SyntaxFactories;
 internal class ConstructorSyntaxFactory
 {
     private static readonly Regex UnderscoreRegex = new("^_", RegexOptions.Compiled);
