@@ -7,7 +7,10 @@ using Microsoft.CodeAnalysis.CSharp;
 namespace AutoDependencies.Tests.Helpers;
 internal static class TestHelper
 {
-    public static (string GeneratedOutput, ImmutableArray<Diagnostic> Diagnostics) GetGeneratedOutput<T>(string source, string[]? additionalSources = null)
+    public static (string GeneratedOutput, ImmutableArray<Diagnostic> Diagnostics) GetGeneratedOutput<T>(
+        string source, 
+        string[]? additionalSources = null,
+        NullableContextOptions nullableContextOptions = NullableContextOptions.Disable)
         where T : IIncrementalGenerator, new()
     {
         var references = AppDomain.CurrentDomain.GetAssemblies()
@@ -23,7 +26,13 @@ internal static class TestHelper
         var syntaxTrees = (additionalSources?.Select(x => CSharpSyntaxTree.ParseText(x)) ?? Array.Empty<SyntaxTree>())
             .Concat(new[] { CSharpSyntaxTree.ParseText(source) });
 
-        var compilation = CSharpCompilation.Create("Tests", syntaxTrees, references);
+        var compilationOptions = new CSharpCompilationOptions(
+            OutputKind.DynamicallyLinkedLibrary, 
+            nullableContextOptions: nullableContextOptions);
+
+        var compilation = CSharpCompilation.Create("Tests", syntaxTrees, references)
+            .WithOptions(compilationOptions);
+       
         var originalTreesCount = compilation.SyntaxTrees.Length 
                                  + DefaultAttributes.GetOrCreateDefaultAttributes().Count;
 

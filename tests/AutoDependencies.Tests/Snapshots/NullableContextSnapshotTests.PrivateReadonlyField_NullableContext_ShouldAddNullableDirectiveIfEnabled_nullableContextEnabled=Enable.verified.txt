@@ -1,0 +1,19 @@
+﻿using AutoDependencies.Attributes;
+
+#nullable enable
+namespace AutoDependencies.Services
+{
+    [Generated]
+    internal partial class TestService : ITestService
+    {
+        public TestService(ExternalLib.Services.IExternalService? externalService)
+        {
+            _externalService = externalService;
+        }
+    }
+
+    [Generated]
+    public interface ITestService
+    {
+    }
+}
