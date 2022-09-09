@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using AutoDependencies.Interfaces.Generated;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AutoDependencies.Services;
 
@@ -11,6 +12,6 @@ class Program
         
         var a = new FirstService(null, new SecondService(), new ThirdService());
 
-        var b = a.DoSmth();
+        var b = a.DoSmth(new SecondService());
     }
 }

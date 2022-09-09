@@ -6,7 +6,7 @@ using AutoDependencies.Generator.Extensions;
 
 namespace AutoDependencies.Generator.Collectors;
 
-internal static class PreliminaryCollector
+internal static class PreliminaryInfoCollector
 {
     private static readonly SyntaxKind[] ForbiddenModifiers = {
         SyntaxKind.StaticKeyword,

@@ -1,4 +1,5 @@
 ﻿using AutoDependencies.Attributes;
+using AutoDependencies.Interfaces.Generated;
 
 namespace AutoDependencies.Services
 {
@@ -10,7 +11,10 @@ namespace AutoDependencies.Services
             _externalService = externalService;
         }
     }
+}
 
+namespace AutoDependencies.Interfaces.Generated
+{
     [Generated]
     public interface ITestService
     {

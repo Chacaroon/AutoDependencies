@@ -62,10 +62,6 @@ internal static class ConstructorMembersInfoCollector
             _ => throw new ArgumentOutOfRangeException(nameof(declarationSyntax), declarationSyntax, null)
         };
 
-        return new ConstructorMemberInfo
-        {
-            Name = identifier.Text,
-            Type = type.ToFullNameTypeSyntax(semanticModel)
-        };
+        return new ConstructorMemberInfo(Name: identifier.Text, Type: type.ToFullNameTypeSyntax(semanticModel));
     }
 }

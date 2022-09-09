@@ -19,12 +19,12 @@ public class ServiceGenerator : IIncrementalGenerator
         context.RegisterPostInitializationOutput(GenerateDefaultAttributes);
 
         IncrementalValuesProvider<ClassDeclarationSyntax> classDeclarations = context.SyntaxProvider.CreateSyntaxProvider(
-            (node, _) => PreliminaryCollector.IsCandidateForGeneration(node),
+            (node, _) => PreliminaryInfoCollector.IsCandidateForGeneration(node),
             (ctx, cancellationToken) =>
             {
                 var node = (ClassDeclarationSyntax)ctx.Node;
                 
-                return PreliminaryCollector.IsApplicableForSourceGeneration(node, ctx.SemanticModel, cancellationToken)
+                return PreliminaryInfoCollector.IsApplicableForSourceGeneration(node, ctx.SemanticModel, cancellationToken)
                     ? node
                     : null;
             })
