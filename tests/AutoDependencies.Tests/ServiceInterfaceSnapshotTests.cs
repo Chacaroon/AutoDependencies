@@ -1,4 +1,5 @@
 ﻿using AutoDependencies.Generator;
+using AutoDependencies.Tests.Data;
 using AutoDependencies.Tests.Helpers;
 
 namespace AutoDependencies.Tests;
@@ -21,7 +22,7 @@ public class ServiceInterfaceSnapshotTests : SnapshotTestsBase<ServiceGenerator>
     public string TestMethod() {
         return null;
     }";
-        
+
         var source = GetSource(members);
 
         return Verify(source);
@@ -32,7 +33,7 @@ public class ServiceInterfaceSnapshotTests : SnapshotTestsBase<ServiceGenerator>
     {
         var members = @"
     public string TestMethod() => null;";
-        
+
         var source = GetSource(members);
 
         return Verify(source);
@@ -53,5 +54,29 @@ public class ServiceInterfaceSnapshotTests : SnapshotTestsBase<ServiceGenerator>
         var source = GetSource(members);
 
         return Verify(source).UseParameters(modifier);
+    }
+
+
+    [Fact]
+    public Task PublicMethodWithPrimitiveTypeParameter_Void_GeneratesInterfaceMemberWithParameters()
+    {
+        var members = @"
+    public void TestMethod(int parameter) {}";
+
+        var source = GetSource(members);
+
+        return Verify(source);
+    }
+
+    [Fact]
+    public Task PublicMethodWithExternalTypeParameter_Void_GeneratesInterfaceMemberWithParameters()
+    {
+        var usingDirectives = new[] { "using ExternalLib.Services;" };
+        var members = @"
+    public void TestMethod(IExternalService parameter) {}";
+
+        var source = GetSource(members, usingDirectives);
+
+        return Verify(source, new[] { TestData.ExternalService });
     }
 }

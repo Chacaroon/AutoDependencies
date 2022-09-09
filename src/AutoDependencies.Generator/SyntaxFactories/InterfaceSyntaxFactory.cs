@@ -28,6 +28,7 @@ internal static class InterfaceSyntaxFactory
         var members = interfaceMembersInfo
             .Select(x => MethodDeclaration(x.ReturnType, x.Name)
                 .WithModifiers(TokenList())
+                .WithParameterList(x.ParameterList)
                 .WithBody(null)
                 .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)))
             .Cast<MemberDeclarationSyntax>()
