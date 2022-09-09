@@ -5,4 +5,13 @@ internal static class TestData
 namespace ExternalLib.Services {
     public interface IExternalService {}
 }";
+
+    public static string SecondServiceWithServiceAttribute = @"
+using AutoDependencies.Attributes;
+
+namespace AutoDependencies.Services.External {
+    [Service]
+    public class SecondService {}
+}";
+
 }

@@ -9,30 +9,36 @@ public static class ServiceSyntaxFactory
 {
     public static SyntaxNode GenerateService(ServiceToGenerateInfo serviceToGenerateInfo)
     {
-        var (serviceInfo, interfaceMembersInfo, constructorMembersInfo, nullableEnabled) = serviceToGenerateInfo;
+        var (serviceInfo, interfaceInfo, constructorMembersInfo, nullableEnabled) = serviceToGenerateInfo;
 
-        var interfaceDeclaration = InterfaceSyntaxFactory.CreateInterfaceDeclarationSyntax(serviceInfo.InterfaceName, interfaceMembersInfo);
+        var interfaceDeclaration = InterfaceSyntaxFactory.CreateInterfaceDeclarationSyntax(serviceInfo.InterfaceName, interfaceInfo.InterfaceMembers);
         var constructorDeclarationSyntax = ConstructorSyntaxFactory.CreateConstructor(serviceInfo, constructorMembersInfo);
 
         var classDeclaration = ClassSyntaxFactory.GeneratePartialClassService(serviceInfo, constructorDeclarationSyntax);
 
-        var namespaceDeclaration = NamespaceSyntaxFactory.CreateNamespace(
+        var serviceNamespaceDeclaration = NamespaceSyntaxFactory.CreateNamespace(
             serviceInfo.Namespace,
-            new MemberDeclarationSyntax[] { classDeclaration, interfaceDeclaration });
+            new MemberDeclarationSyntax[] { classDeclaration });
+
+        var interfaceNamespaceDeclaration = NamespaceSyntaxFactory.CreateNamespace(
+            interfaceInfo.NamespaceName,
+            new[] { interfaceDeclaration });
 
         if (nullableEnabled)
         {
-            namespaceDeclaration = namespaceDeclaration.WithLeadingTrivia(Trivia(NullableDirectiveTrivia(Token(SyntaxKind.EnableKeyword), true)));
+            serviceNamespaceDeclaration = serviceNamespaceDeclaration.WithLeadingTrivia(Trivia(NullableDirectiveTrivia(Token(SyntaxKind.EnableKeyword), true)));
         }
 
         var root = CompilationUnit()
             .WithMembers(List(new MemberDeclarationSyntax[]
             {
-                namespaceDeclaration
+                serviceNamespaceDeclaration,
+                interfaceNamespaceDeclaration
             }))
             .WithUsings(UsingSyntaxFactory.CreateUsingDirectiveList(new[]
             {
-                GeneratorConstants.PredefinedNamespaces.AttributesNamespace
+                GeneratorConstants.PredefinedNamespaces.AttributesNamespace,
+                GeneratorConstants.PredefinedNamespaces.GeneratedInterfacesNamespace
             }));
 
         return root.NormalizeWhitespace();

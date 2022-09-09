@@ -1,4 +1,5 @@
 using AutoDependencies.Generator;
+using AutoDependencies.Generator.Constants;
 using AutoDependencies.Tests.Data;
 using AutoDependencies.Tests.Helpers;
 
@@ -73,5 +74,16 @@ public class ServiceConstructorSnapshotTests : SnapshotTestsBase<ServiceGenerato
         var source = GetSource(members, usingDirectives);
 
         return Verify(source, new[] { TestData.ExternalService });
+    }
+
+    [Fact]
+    public Task InjectGeneratedServiceInterface_ResolvesGeneratedInterface()
+    {
+        var usingDirectives = new[] { $"using {GeneratorConstants.PredefinedNamespaces.GeneratedInterfacesNamespace};" };
+        var members = "private readonly ISecondService _secondService;";
+
+        var source = GetSource(members, usingDirectives);
+
+        return Verify(source, new[] { TestData.SecondServiceWithServiceAttribute });
     }
 }

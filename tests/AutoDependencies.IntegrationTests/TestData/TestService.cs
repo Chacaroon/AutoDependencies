@@ -1,14 +1,15 @@
 ﻿using AutoDependencies.Attributes;
+using AutoDependencies.Interfaces.Generated;
 
 namespace AutoDependencies.IntegrationTests.TestData;
 
 [Service]
 internal partial class TestService
 {
-    private readonly ITestDependency _depenency;
+    private readonly ITestDependency _dependency;
 
     public string GetDataFromDependency()
     {
-        return _depenency.ReturnTestValue();
+        return _dependency.ReturnTestValue();
     }
 }

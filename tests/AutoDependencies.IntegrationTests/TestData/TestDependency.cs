@@ -1,6 +1,6 @@
 ﻿using AutoDependencies.Attributes;
 
-namespace AutoDependencies.IntegrationTests.TestData;
+namespace AutoDependencies.IntegrationTests.TestData.External;
 
 [Service]
 internal partial class TestDependency

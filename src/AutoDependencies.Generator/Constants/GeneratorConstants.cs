@@ -11,6 +11,7 @@ public class GeneratorConstants
     public class PredefinedNamespaces
     {
         public const string AttributesNamespace = "AutoDependencies.Attributes";
+        public const string GeneratedInterfacesNamespace = "AutoDependencies.Interfaces.Generated";
     }
 
     public const string GeneratedDocumentExtension = ".g.cs";

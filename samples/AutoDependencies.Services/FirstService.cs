@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using AutoDependencies.Attributes;
+using AutoDependencies.Interfaces.Generated;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AutoDependencies.Services;
@@ -12,7 +13,7 @@ internal partial class FirstService
     [Inject]
     public IThirdService ThirdService { get; }
 
-    public IServiceProviderFactory<string>? DoSmth()
+    public IServiceProviderFactory<string>? DoSmth(ISecondService secondService)
     {
         return null;
     }

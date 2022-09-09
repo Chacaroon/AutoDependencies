@@ -6,9 +6,9 @@ namespace AutoDependencies.Services
     [Generated]
     internal partial class TestService : ITestService
     {
-        public TestService(int?[] externalService)
+        public TestService(ISecondService secondService)
         {
-            _externalService = externalService;
+            _secondService = secondService;
         }
     }
 }
