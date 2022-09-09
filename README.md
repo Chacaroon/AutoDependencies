@@ -37,7 +37,7 @@ This adds a `<PackageReference>` to your project. You can additionally mark the 
   </PropertyGroup>
 
   <!-- Add the package -->
-  <PackageReference Include="AutoDependencies.Generator" Version="0.1.1" PrivateAssets="all"/>
+  <PackageReference Include="AutoDependencies.Generator" Version="0.1.2" PrivateAssets="all"/>
 
 </Project>
 ```
