@@ -14,6 +14,7 @@ internal static class ConstructorMembersInfoCollector
             .OfType<MemberDeclarationSyntax>()
             .Where(memberDeclarationSyntax => CanBeConstructorMember(memberDeclarationSyntax, semanticModel))
             .Select(x => CreateConstructorMemberInfo(x, semanticModel))
+            .Where(x => x != null)
             .ToArray();
         
         return memberDeclarations;
@@ -59,8 +60,13 @@ internal static class ConstructorMembersInfoCollector
                 propertyDeclarationSyntax.Identifier,
                 propertyDeclarationSyntax.Type),
 
-            _ => throw new ArgumentOutOfRangeException(nameof(declarationSyntax), declarationSyntax, null)
+            _ => (default, default)
         };
+
+        if (identifier == default || type == default)
+        {
+            return null!;
+        }
 
         return new ConstructorMemberInfo(Name: identifier.Text, Type: type.ToFullNameTypeSyntax(semanticModel));
     }

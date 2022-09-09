@@ -1,5 +1,5 @@
 ﻿using AutoDependencies.Attributes;
-using AutoDependencies.Interfaces.Generated;
+using AutoDependencies.IntegrationTests.Interfaces.Generated;
 
 namespace AutoDependencies.IntegrationTests.TestData;
 

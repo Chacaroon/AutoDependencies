@@ -1,6 +1,6 @@
+using AutoDependencies.IntegrationTests.Interfaces.Generated;
 using AutoDependencies.IntegrationTests.TestData;
 using AutoDependencies.IntegrationTests.TestData.External;
-using AutoDependencies.Interfaces.Generated;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AutoDependencies.IntegrationTests;

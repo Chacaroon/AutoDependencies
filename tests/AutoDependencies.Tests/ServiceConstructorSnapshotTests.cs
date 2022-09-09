@@ -79,7 +79,7 @@ public class ServiceConstructorSnapshotTests : SnapshotTestsBase<ServiceGenerato
     [Fact]
     public Task InjectGeneratedServiceInterface_ResolvesGeneratedInterface()
     {
-        var usingDirectives = new[] { $"using {GeneratorConstants.PredefinedNamespaces.GeneratedInterfacesNamespace};" };
+        var usingDirectives = new[] { "using Tests.Interfaces.Generated;" };
         var members = "private readonly ISecondService _secondService;";
 
         var source = GetSource(members, usingDirectives);

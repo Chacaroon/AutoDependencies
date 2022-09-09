@@ -1,4 +1,4 @@
-﻿using AutoDependencies.Interfaces.Generated;
+﻿using AutoDependencies.Services.Interfaces.Generated;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AutoDependencies.Services;
