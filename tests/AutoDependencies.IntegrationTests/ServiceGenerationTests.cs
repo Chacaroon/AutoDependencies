@@ -1,4 +1,8 @@
+#if NUGET_INTEGRATION_TESTS
+using AutoDependencies.NugetIntegrationTests.Interfaces.Generated;
+#else
 using AutoDependencies.IntegrationTests.Interfaces.Generated;
+#endif
 using AutoDependencies.IntegrationTests.TestData;
 using AutoDependencies.IntegrationTests.TestData.External;
 using Microsoft.Extensions.DependencyInjection;

@@ -120,7 +120,7 @@ class Build : NukeBuild
         {
             var projectFiles = new[]
             {
-                RootDirectory / "tests/AutoDependencies.NugetIntegrationTests/AutoDepencencies.NugetIntegrationTests.csproj"
+                RootDirectory / "tests/AutoDependencies.NugetIntegrationTests/AutoDependencies.NugetIntegrationTests.csproj"
             };
 
             if (!string.IsNullOrEmpty(PackagesDirectory))
