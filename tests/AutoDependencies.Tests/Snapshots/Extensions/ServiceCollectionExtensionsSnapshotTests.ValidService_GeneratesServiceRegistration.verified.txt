@@ -1,0 +1,17 @@
+﻿using AutoDependencies.Services;
+using AutoDependencies.Attributes;
+using Microsoft.Extensions.DependencyInjection;
+using Tests.Interfaces.Generated;
+
+namespace Tests.Extensions.Generated
+{
+    [Generated]
+    public static class TestsServiceCollectionExtensions
+    {
+        public static IServiceCollection RegisterServicesFormTests(this IServiceCollection services, ServiceLifetime lifetime)
+        {
+            services.Add(new ServiceDescriptor(typeof(ITestService), typeof(TestService), lifetime));
+            return services;
+        }
+    }
+}

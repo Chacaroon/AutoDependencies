@@ -25,7 +25,7 @@ public class NullableContextSnapshotTests : SnapshotTestsBase<ServiceGenerator>
             ? NullableContextOptions.Enable 
             : NullableContextOptions.Disable;
 
-        return Verify(source, new[] { TestData.ExternalService }, nullableContextOptions)
+        return VerifyService(source, new[] { TestData.ExternalService }, nullableContextOptions)
             .UseParameters(nullableContextOptions);
     }
 }

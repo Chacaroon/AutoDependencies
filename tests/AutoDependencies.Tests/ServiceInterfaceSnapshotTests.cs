@@ -12,7 +12,7 @@ public class ServiceInterfaceSnapshotTests : SnapshotTestsBase<ServiceGenerator>
     {
         var source = GetSource("public void TestMethod() {}");
 
-        return Verify(source);
+        return VerifyService(source);
     }
 
     [Fact]
@@ -25,7 +25,7 @@ public class ServiceInterfaceSnapshotTests : SnapshotTestsBase<ServiceGenerator>
 
         var source = GetSource(members);
 
-        return Verify(source);
+        return VerifyService(source);
     }
 
     [Fact]
@@ -36,7 +36,7 @@ public class ServiceInterfaceSnapshotTests : SnapshotTestsBase<ServiceGenerator>
 
         var source = GetSource(members);
 
-        return Verify(source);
+        return VerifyService(source);
     }
 
     [Theory]
@@ -53,7 +53,7 @@ public class ServiceInterfaceSnapshotTests : SnapshotTestsBase<ServiceGenerator>
 
         var source = GetSource(members);
 
-        return Verify(source).UseParameters(modifier);
+        return VerifyService(source).UseParameters(modifier);
     }
 
 
@@ -65,7 +65,7 @@ public class ServiceInterfaceSnapshotTests : SnapshotTestsBase<ServiceGenerator>
 
         var source = GetSource(members);
 
-        return Verify(source);
+        return VerifyService(source);
     }
 
     [Fact]
@@ -77,6 +77,6 @@ public class ServiceInterfaceSnapshotTests : SnapshotTestsBase<ServiceGenerator>
 
         var source = GetSource(members, usingDirectives);
 
-        return Verify(source, new[] { TestData.ExternalService });
+        return VerifyService(source, new[] { TestData.ExternalService });
     }
 }
