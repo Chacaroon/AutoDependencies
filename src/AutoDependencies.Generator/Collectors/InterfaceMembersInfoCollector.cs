@@ -20,7 +20,9 @@ internal static class InterfaceMembersInfoCollector
                 ReturnType: x.ReturnType.ToFullNameTypeSyntax(semanticModel)))
             .ToArray();
 
-        return new(PredefinedNamespaces.GeneratedInterfacesNamespace, members);
+        var namespaceName = $"{semanticModel.Compilation.AssemblyName ?? "AutoDependencies"}.Interfaces.Generated";
+
+        return new(namespaceName, members);
     }
 
     private static bool CanBeInterfaceMember(MethodDeclarationSyntax syntax) =>

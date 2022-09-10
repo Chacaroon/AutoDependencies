@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using AutoDependencies.Attributes;
-using AutoDependencies.Interfaces.Generated;
+using AutoDependencies.Services.Interfaces.Generated;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AutoDependencies.Services;

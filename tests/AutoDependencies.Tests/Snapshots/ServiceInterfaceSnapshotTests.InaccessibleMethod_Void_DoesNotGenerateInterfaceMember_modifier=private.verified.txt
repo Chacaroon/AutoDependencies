@@ -1,5 +1,5 @@
 ﻿using AutoDependencies.Attributes;
-using AutoDependencies.Interfaces.Generated;
+using Tests.Interfaces.Generated;
 
 namespace AutoDependencies.Services
 {
@@ -12,7 +12,7 @@ namespace AutoDependencies.Services
     }
 }
 
-namespace AutoDependencies.Interfaces.Generated
+namespace Tests.Interfaces.Generated
 {
     [Generated]
     public interface ITestService

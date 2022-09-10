@@ -5,6 +5,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
+		<DefineConstants>$(DefineConstants);NUGET_INTEGRATION_TESTS</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>

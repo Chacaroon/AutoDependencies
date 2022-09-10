@@ -38,7 +38,7 @@ public static class ServiceSyntaxFactory
             .WithUsings(UsingSyntaxFactory.CreateUsingDirectiveList(new[]
             {
                 GeneratorConstants.PredefinedNamespaces.AttributesNamespace,
-                GeneratorConstants.PredefinedNamespaces.GeneratedInterfacesNamespace
+                interfaceInfo.NamespaceName
             }));
 
         return root.NormalizeWhitespace();
