@@ -1,20 +1,23 @@
-﻿using System.Collections.Generic;
-using AutoDependencies.Attributes;
+﻿using AutoDependencies.Attributes;
+using AutoDependencies.Services.External.Interfaces.Generated;
 using AutoDependencies.Services.Interfaces.Generated;
-using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace AutoDependencies.Services;
 
 [Service]
 internal partial class FirstService
 {
-    private readonly HashSet<string>? _cache;
     private readonly ISecondService _secondService;
     [Inject]
     public IThirdService ThirdService { get; }
 
-    public IServiceProviderFactory<string>? DoSmth(ISecondService secondService)
+    private readonly IExternalService _externalService;
+
+    public void ConsoleDataFromInjectedServices()
     {
-        return null;
+        Console.WriteLine(_secondService.GetString());
+        Console.WriteLine(ThirdService.GetString());
+        Console.WriteLine(_externalService.GetString());
     }
 }

@@ -3,7 +3,7 @@
 using Microsoft.CodeAnalysis;
 
 namespace AutoDependencies.Generator.Models;
-public record ServiceInfo(SyntaxToken Name, SyntaxTokenList Modifiers, string Namespace)
+public record ServiceInfo(SyntaxToken ServiceName, SyntaxTokenList Modifiers, string NamespaceName)
 {
-    public string InterfaceName => $"I{Name}";
+    public string InterfaceName => $"I{ServiceName}";
 }

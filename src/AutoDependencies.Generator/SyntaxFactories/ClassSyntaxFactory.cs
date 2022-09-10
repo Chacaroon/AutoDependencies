@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace AutoDependencies.Generator.SyntaxFactories;
 internal static class ClassSyntaxFactory
 {
-    public static ClassDeclarationSyntax GeneratePartialClassService(
+    public static ClassDeclarationSyntax GeneratePartialClassServiceSyntax(
         ServiceInfo serviceInfo,
         ConstructorDeclarationSyntax constructor)
     {
@@ -16,7 +16,7 @@ internal static class ClassSyntaxFactory
             SimpleBaseType(interfaceIdentifier)
         }));
         
-        var classDeclaration = ClassDeclaration(serviceInfo.Name)
+        var classDeclaration = ClassDeclaration(serviceInfo.ServiceName)
             .WithAttributeLists(List(new[]
             {
                 AttributeSyntaxFactory.GetOrCreateAttributeListSyntax(GeneratorConstants.AttributeNames.GeneratedAttribute)

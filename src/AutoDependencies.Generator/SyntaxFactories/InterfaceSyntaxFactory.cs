@@ -17,12 +17,12 @@ internal static class InterfaceSyntaxFactory
                 AttributeSyntaxFactory.GetOrCreateAttributeListSyntax(GeneratorConstants.AttributeNames.GeneratedAttribute)
             }))
             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
-            .WithMembers(CreateInterfaceMembers(interfaceMembersInfo));
+            .WithMembers(CreateInterfaceMembersSyntax(interfaceMembersInfo));
 
         return interfaceDeclaration;
     }
 
-    private static SyntaxList<MemberDeclarationSyntax> CreateInterfaceMembers(
+    private static SyntaxList<MemberDeclarationSyntax> CreateInterfaceMembersSyntax(
         InterfaceMemberInfo[] interfaceMembersInfo)
     {
         var members = interfaceMembersInfo

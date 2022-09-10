@@ -23,7 +23,7 @@ public class ServiceGenerator : IIncrementalGenerator
             (ctx, cancellationToken) =>
             {
                 var node = (ClassDeclarationSyntax)ctx.Node;
-                
+
                 return PreliminaryInfoCollector.IsApplicableForSourceGeneration(node, ctx.SemanticModel, cancellationToken)
                     ? node
                     : null;
@@ -44,33 +44,42 @@ public class ServiceGenerator : IIncrementalGenerator
 
         var distinctClassDeclarations = classDeclarations.Distinct().ToArray();
         var classesToGenerate = GetInfoForGenerate(compilation, distinctClassDeclarations, context.CancellationToken);
-        
+
+        var extensionsDeclaration = ServiceCollectionExtensionsSyntaxFactory.CreateServiceCollectionExtensionsSyntax(
+            compilation.AssemblyName!,
+            classesToGenerate);
+
+        if (extensionsDeclaration != null)
+        {
+            context.AddSource("ServiceCollectionExtensions".ToGeneratedFileName(), extensionsDeclaration.GetText(Encoding.UTF8));
+        }
+
         foreach (var serviceInfo in classesToGenerate)
         {
-            var generatedService = ServiceSyntaxFactory.GenerateService(serviceInfo).GetText(Encoding.UTF8);
-            var fileName = serviceInfo.ServiceInfo.Name.ValueText.ToGeneratedFileName();
-            
+            var generatedService = ServiceSyntaxFactory.GenerateServiceSyntax(serviceInfo).GetText(Encoding.UTF8);
+            var fileName = serviceInfo.ServiceInfo.ServiceName.ValueText.ToGeneratedFileName();
+
             context.AddSource(fileName, generatedService);
         }
     }
 
-    private static List<ServiceToGenerateInfo> GetInfoForGenerate(
-        Compilation compilation, 
-        ClassDeclarationSyntax[] classDeclarations, 
+    private static ServiceToGenerateInfo[] GetInfoForGenerate(
+        Compilation compilation,
+        ClassDeclarationSyntax[] classDeclarations,
         CancellationToken cancellationToken)
     {
-        var servicesToGenerate = new List<ServiceToGenerateInfo>(classDeclarations.Length);
+        var servicesToGenerate = new ServiceToGenerateInfo[classDeclarations.Length];
 
-        foreach (var classDeclarationSyntax in classDeclarations)
+        for (var i = 0; i < classDeclarations.Length; i++)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var semanticModel = compilation.GetSemanticModel(classDeclarationSyntax.SyntaxTree);
+            var semanticModel = compilation.GetSemanticModel(classDeclarations[i].SyntaxTree);
             var nullableEnabled = compilation.Options.NullableContextOptions == NullableContextOptions.Enable;
 
-            var serviceToGenerateInfo = ServiceCollector.GetServiceToGenerateInfo(classDeclarationSyntax, semanticModel, nullableEnabled);
+            var serviceToGenerateInfo = ServiceCollector.GetServiceToGenerateInfo(classDeclarations[i], semanticModel, nullableEnabled);
 
-            servicesToGenerate.Add(serviceToGenerateInfo);
+            servicesToGenerate[i] = serviceToGenerateInfo;
         }
 
         return servicesToGenerate;

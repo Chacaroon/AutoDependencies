@@ -7,22 +7,20 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace AutoDependencies.Generator.SyntaxFactories;
 public static class ServiceSyntaxFactory
 {
-    public static SyntaxNode GenerateService(ServiceToGenerateInfo serviceToGenerateInfo)
+    public static SyntaxNode GenerateServiceSyntax(ServiceToGenerateInfo serviceToGenerateInfo)
     {
         var (serviceInfo, interfaceInfo, constructorMembersInfo, nullableEnabled) = serviceToGenerateInfo;
 
         var interfaceDeclaration = InterfaceSyntaxFactory.CreateInterfaceDeclarationSyntax(serviceInfo.InterfaceName, interfaceInfo.InterfaceMembers);
-        var constructorDeclarationSyntax = ConstructorSyntaxFactory.CreateConstructor(serviceInfo, constructorMembersInfo);
+        var constructorDeclarationSyntax = ConstructorSyntaxFactory.CreateConstructorSyntax(serviceInfo, constructorMembersInfo);
 
-        var classDeclaration = ClassSyntaxFactory.GeneratePartialClassService(serviceInfo, constructorDeclarationSyntax);
+        var classDeclaration = ClassSyntaxFactory.GeneratePartialClassServiceSyntax(serviceInfo, constructorDeclarationSyntax);
+        
+        var serviceNamespaceDeclaration = NamespaceDeclaration(IdentifierName(serviceInfo.NamespaceName))
+            .WithMembers(List(new MemberDeclarationSyntax[] { classDeclaration }));
 
-        var serviceNamespaceDeclaration = NamespaceSyntaxFactory.CreateNamespace(
-            serviceInfo.Namespace,
-            new MemberDeclarationSyntax[] { classDeclaration });
-
-        var interfaceNamespaceDeclaration = NamespaceSyntaxFactory.CreateNamespace(
-            interfaceInfo.NamespaceName,
-            new[] { interfaceDeclaration });
+        var interfaceNamespaceDeclaration = NamespaceDeclaration(IdentifierName(interfaceInfo.NamespaceName))
+            .WithMembers(List(new MemberDeclarationSyntax[] { interfaceDeclaration }));
 
         if (nullableEnabled)
         {
@@ -35,7 +33,7 @@ public static class ServiceSyntaxFactory
                 serviceNamespaceDeclaration,
                 interfaceNamespaceDeclaration
             }))
-            .WithUsings(UsingSyntaxFactory.CreateUsingDirectiveList(new[]
+            .WithUsings(UsingSyntaxFactory.CreateUsingDirectiveListSyntax(new[]
             {
                 GeneratorConstants.PredefinedNamespaces.AttributesNamespace,
                 interfaceInfo.NamespaceName

@@ -9,8 +9,8 @@ internal static class ServiceInfoCollector
     {
         var namespaceName = GetNamespace(classDeclarationSyntax);
 
-        return new ServiceInfo(Name: classDeclarationSyntax.Identifier, Modifiers: classDeclarationSyntax.Modifiers,
-            Namespace: namespaceName);
+        return new ServiceInfo(ServiceName: classDeclarationSyntax.Identifier, Modifiers: classDeclarationSyntax.Modifiers,
+            NamespaceName: namespaceName);
     }
 
     private static string GetNamespace(BaseTypeDeclarationSyntax syntax)

@@ -24,5 +24,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\AutoDependencies.Generator\AutoDependencies.Generator.csproj" PrivateAssets="all" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<ProjectReference Include="..\AutoDependencies.Services.External\AutoDependencies.Services.External.csproj" />
 	</ItemGroup>
 </Project>

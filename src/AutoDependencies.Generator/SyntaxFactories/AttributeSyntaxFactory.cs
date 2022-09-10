@@ -30,7 +30,8 @@ public static class AttributeSyntaxFactory
                     attributeUsageAttributeList
                 }));
 
-        var namespaceDeclaration = NamespaceSyntaxFactory.CreateNamespace(namespaceName, new[] { attributeClassDeclaration });
+        var namespaceDeclaration = NamespaceDeclaration(IdentifierName(namespaceName))
+            .WithMembers(List(new MemberDeclarationSyntax[] { attributeClassDeclaration }));
 
         var root = CompilationUnit()
             .WithMembers(List(new MemberDeclarationSyntax[]

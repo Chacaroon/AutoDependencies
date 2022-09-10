@@ -8,14 +8,14 @@ internal class ConstructorSyntaxFactory
 {
     private static readonly Regex UnderscoreRegex = new("^_", RegexOptions.Compiled);
 
-    public static ConstructorDeclarationSyntax CreateConstructor(
+    public static ConstructorDeclarationSyntax CreateConstructorSyntax(
         ServiceInfo serviceInfo,
         ConstructorMemberInfo[] constructorMembersInfo)
     {
-        var parameters = CreateConstructorParameters(constructorMembersInfo);
-        var body = Block(CreateAssignmentStatements(constructorMembersInfo));
+        var parameters = CreateConstructorParametersSyntax(constructorMembersInfo);
+        var body = Block(CreateAssignmentStatementsSyntax(constructorMembersInfo));
 
-        var constructorDeclaration = ConstructorDeclaration(serviceInfo.Name)
+        var constructorDeclaration = ConstructorDeclaration(serviceInfo.ServiceName)
             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
             .WithParameterList(parameters)
             .WithBody(body);
@@ -23,7 +23,7 @@ internal class ConstructorSyntaxFactory
         return constructorDeclaration;
     }
 
-    private static ParameterListSyntax CreateConstructorParameters(ConstructorMemberInfo[] constructorMembersInfo)
+    private static ParameterListSyntax CreateConstructorParametersSyntax(ConstructorMemberInfo[] constructorMembersInfo)
     {
         if (constructorMembersInfo.Length == 0)
         {
@@ -40,7 +40,7 @@ internal class ConstructorSyntaxFactory
         return ParameterList(SeparatedList(parameters));
     }
 
-    private static StatementSyntax[] CreateAssignmentStatements(ConstructorMemberInfo[] constructorMembersInfo)
+    private static StatementSyntax[] CreateAssignmentStatementsSyntax(ConstructorMemberInfo[] constructorMembersInfo)
     {
         var expressionStatements = constructorMembersInfo
             .Select(x => AssignmentExpression(
