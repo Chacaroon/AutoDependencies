@@ -119,7 +119,7 @@ namespace BestServiceEver.Extensions.Generated
     {
         public static IServiceCollection RegisterServicesFormBestServiceEver(this IServiceCollection services, ServiceLifetime lifetime)
         {
-            services.Add(new ServiceDescriptor(typeof(IFirstService), typeof(FirstService), lifetime));
+            services.Add(new ServiceDescriptor(typeof(ISampleService), typeof(SampleService), lifetime));
             return services;
         }
     }
