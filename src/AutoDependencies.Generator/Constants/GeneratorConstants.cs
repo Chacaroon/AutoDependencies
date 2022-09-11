@@ -13,6 +13,7 @@ public class GeneratorConstants
         public const string AttributesNamespace = "AutoDependencies.Attributes";
         public const string DependencyInjectionNamespace = "Microsoft.Extensions.DependencyInjection";
         public const string GeneratedExtensionsNamespacePart = "Extensions.Generated";
+        public const string GeneratedInterfacesNamespacePart = "Interfaces.Generated";
     }
 
     public class PredefinedClassNames

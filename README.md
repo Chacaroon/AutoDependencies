@@ -82,18 +82,43 @@ using AutoDependencies.Attributes;
 namespace BestServiceEver 
 {
     [Generated]
-    public partial class FirstService : IFirstService
+    public partial class SampleService : ISampleService
     {
-        public FirstService(BestServiceEver.Interfaces.IDependency dependency)
+        public SampleService(BestServiceEver.Interfaces.IDependency dependency)
         {
             _dependency = dependency;
         }
     }
+}
 
+namespace BestServiceEver.Interfaces.Generated
+{
     [Generated]
-    public interface IFirstService
+    public interface ISampleService
     {
         void DoWork();
+    }
+}
+```
+
+In addition to the above, one more class will be generated. This class will contain an extension method for the [IServiceCollection](https://docs.microsoft.com/ru-ru/dotnet/api/microsoft.extensions.dependencyinjection.iservicecollection?view=dotnet-plat-ext-6.0) that will register all generated services in the dependency injection container.
+
+```csharp
+using AutoDependencies.Services;
+using AutoDependencies.Attributes;
+using Microsoft.Extensions.DependencyInjection;
+using AutoDependencies.Services.Interfaces.Generated;
+
+namespace AutoDependencies.Services.Extensions.Generated
+{
+    [Generated]
+    public static class BestServiceEverServiceCollectionExtensions
+    {
+        public static IServiceCollection RegisterServicesFormBestServiceEver(this IServiceCollection services, ServiceLifetime lifetime)
+        {
+            services.Add(new ServiceDescriptor(typeof(IFirstService), typeof(FirstService), lifetime));
+            return services;
+        }
     }
 }
 ```
