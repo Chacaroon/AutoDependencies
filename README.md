@@ -10,7 +10,7 @@ AutoDependencies is a library designed to get rid of boilerplate code in ASP.NET
 - [x] Generate code with Incremental Generatort
 - [x] Create and publish nuget packages
 - [x] Cover generator with tests 
-- [ ] Generate method that registers all generated services to the `IServiceCollection`
+- [x] Generate method that registers all generated services to the `IServiceCollection`
 - [ ] Add code analyzer with code fix
 - [ ] Cover analyzer with tests
 - [ ] Generate an interface for the service depending on a flag (i.e. supress interface generation)
