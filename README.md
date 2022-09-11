@@ -1,6 +1,6 @@
 # AutoDependencies
 
-[![NuGet](https://img.shields.io/nuget/v/AutoDependencies.svg)](https://www.nuget.org/packages/AutoDependencies/)
+[![NuGet](https://img.shields.io/nuget/v/AutoDependencies.Generator.svg)](https://www.nuget.org/packages/AutoDependencies.Generator/)
 
 AutoDependencies is a library designed to get rid of boilerplate code in ASP.NET services by generating it with Incremental Generator.
 
