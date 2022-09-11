@@ -1,5 +1,6 @@
 # AutoDependencies
 
+[![BuildAndPublish](https://github.com/Chacaroon/AutoDependencies/actions/workflows/BuildAndPublish.yml/badge.svg)](https://github.com/Chacaroon/AutoDependencies/actions/workflows/BuildAndPublish.yml)
 [![NuGet](https://img.shields.io/nuget/v/AutoDependencies.Generator.svg)](https://www.nuget.org/packages/AutoDependencies.Generator/)
 
 AutoDependencies is a library designed to get rid of boilerplate code in ASP.NET services by generating it with Incremental Generator.
