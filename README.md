@@ -55,7 +55,7 @@ First, create the service with some dependencies and public methods. Mark just c
 // SampleService.cs
 using AutoDependencies.Attributes;
 
-namespace BestServiceEver;
+namespace Services;
 
 [Service]
 partial class SampleService
@@ -69,7 +69,7 @@ partial class SampleService
 }
 
 // IDependency.cs
-namespace BestServiceEver.Interfaces;
+namespace Services.Interfaces;
 
 interface IDependency
 {
@@ -82,19 +82,19 @@ Then build the project to make Incremental Generator generate the rest of code y
 ```csharp
 using AutoDependencies.Attributes;
 
-namespace BestServiceEver 
+namespace Services
 {
     [Generated]
     public partial class SampleService : ISampleService
     {
-        public SampleService(BestServiceEver.Interfaces.IDependency dependency)
+        public SampleService(Services.Interfaces.IDependency dependency)
         {
             _dependency = dependency;
         }
     }
 }
 
-namespace BestServiceEver.Interfaces.Generated
+namespace Services.Interfaces.Generated
 {
     [Generated]
     public interface ISampleService
@@ -107,19 +107,19 @@ namespace BestServiceEver.Interfaces.Generated
 In addition to the above, one more class will be generated. This class will contain an extension method for the [IServiceCollection](https://docs.microsoft.com/ru-ru/dotnet/api/microsoft.extensions.dependencyinjection.iservicecollection?view=dotnet-plat-ext-6.0) that will register all generated services in the dependency injection container.
 
 ```csharp
-using BestServiceEver;
+using Services;
 using AutoDependencies.Attributes;
 using Microsoft.Extensions.DependencyInjection;
-using BestServiceEver.Interfaces.Generated;
+using Services.Interfaces.Generated;
 
-namespace BestServiceEver.Extensions.Generated
+namespace Services.Extensions.Generated
 {
     [Generated]
     public static class BestServiceEverServiceCollectionExtensions
     {
-        public static IServiceCollection RegisterServicesFormBestServiceEver(this IServiceCollection services, ServiceLifetime lifetime)
+        public static IServiceCollection RegisterServicesFormServices(this IServiceCollection services, ServiceLifetime lifetime)
         {
-            services.Add(new ServiceDescriptor(typeof(IFirstService), typeof(FirstService), lifetime));
+            services.Add(new ServiceDescriptor(typeof(ISampleService), typeof(SampleService), lifetime));
             return services;
         }
     }
