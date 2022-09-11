@@ -17,7 +17,7 @@ namespace AutoDependencies.Services;
 [Service]
 internal partial class TestService {}";
 
-        return Verify(source);
+        return VerifyService(source);
     }
 
     [Fact]
@@ -30,7 +30,7 @@ namespace AutoDependencies.Services;
 
 internal partial class TestService {}";
 
-        return Verify(source);
+        return VerifyService(source);
     }
 
     [Fact]
@@ -44,6 +44,6 @@ namespace AutoDependencies.Services;
 [Service]
 internal class TestService {}";
 
-        return Verify(source);
+        return VerifyService(source);
     }
 }

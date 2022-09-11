@@ -1,5 +1,4 @@
-﻿using AutoDependencies.Generator.Constants;
-using AutoDependencies.Generator.Models;
+﻿using AutoDependencies.Generator.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -8,21 +7,21 @@ namespace AutoDependencies.Generator.SyntaxFactories;
 internal static class InterfaceSyntaxFactory
 {
     public static InterfaceDeclarationSyntax CreateInterfaceDeclarationSyntax(
-        string interfaceName,
+        IdentifierNameSyntax interfaceName,
         InterfaceMemberInfo[] interfaceMembersInfo)
     {
-        var interfaceDeclaration = InterfaceDeclaration(interfaceName)
+        var interfaceDeclaration = InterfaceDeclaration(interfaceName.Identifier)
             .WithAttributeLists(List(new[]
             {
-                AttributeSyntaxFactory.GetOrCreateAttributeListSyntax(GeneratorConstants.AttributeNames.GeneratedAttribute)
+                AttributeSyntaxFactory.GetOrCreateAttributeListSyntax(AttributeNames.GeneratedAttribute)
             }))
             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
-            .WithMembers(CreateInterfaceMembers(interfaceMembersInfo));
+            .WithMembers(CreateInterfaceMembersSyntax(interfaceMembersInfo));
 
         return interfaceDeclaration;
     }
 
-    private static SyntaxList<MemberDeclarationSyntax> CreateInterfaceMembers(
+    private static SyntaxList<MemberDeclarationSyntax> CreateInterfaceMembersSyntax(
         InterfaceMemberInfo[] interfaceMembersInfo)
     {
         var members = interfaceMembersInfo

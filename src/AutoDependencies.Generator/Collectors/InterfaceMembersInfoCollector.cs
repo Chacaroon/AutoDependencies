@@ -1,9 +1,8 @@
-﻿using AutoDependencies.Generator.Models;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.CSharp;
+﻿using AutoDependencies.Generator.Extensions;
+using AutoDependencies.Generator.Models;
 using Microsoft.CodeAnalysis;
-using AutoDependencies.Generator.Extensions;
-using static AutoDependencies.Generator.Constants.GeneratorConstants;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AutoDependencies.Generator.Collectors;
 internal static class InterfaceMembersInfoCollector
@@ -20,9 +19,10 @@ internal static class InterfaceMembersInfoCollector
                 ReturnType: x.ReturnType.ToFullNameTypeSyntax(semanticModel)))
             .ToArray();
 
-        var namespaceName = $"{semanticModel.Compilation.AssemblyName ?? "AutoDependencies"}.Interfaces.Generated";
+        var namespaceName = 
+            $"{semanticModel.Compilation.AssemblyName ?? "AutoDependencies"}.{PredefinedNamespaces.GeneratedInterfacesNamespacePart}";
 
-        return new(namespaceName, members);
+        return new($"I{classDeclarationSyntax.Identifier}", namespaceName, members);
     }
 
     private static bool CanBeInterfaceMember(MethodDeclarationSyntax syntax) =>

@@ -14,16 +14,25 @@ internal partial class TestService {
     {members}
 }";
 
-    protected SettingsTask Verify(string source, string[]? additionalSources = null, NullableContextOptions nullableContextOptions = NullableContextOptions.Disable)
+    protected SettingsTask VerifyService(string source, string[]? additionalSources = null, NullableContextOptions nullableContextOptions = NullableContextOptions.Disable)
     {
-        var (output, diagnostics) = TestHelper.GetGeneratedOutput<TGenerator>(source, additionalSources, nullableContextOptions);
+        var (output, diagnostics, _) = TestHelper.GetGeneratedOutput<TGenerator>(source, additionalSources, nullableContextOptions);
 
         Assert.Empty(diagnostics);
 
-        return Verifier.Verify(output).UseDirectory("../Snapshots");
+        return Verify(output).UseDirectory("../Snapshots/Services");
     }
 
-    protected string GetSource(string serviceMembers, string[]? usingDirectives = null)
+    protected SettingsTask VerifyExtensions(string source, string[]? additionalSources = null, NullableContextOptions nullableContextOptions = NullableContextOptions.Disable)
+    {
+        var (_, diagnostics, extensions) = TestHelper.GetGeneratedOutput<TGenerator>(source, additionalSources, nullableContextOptions);
+
+        Assert.Empty(diagnostics);
+
+        return Verify(extensions).UseDirectory("../Snapshots/Extensions");
+    }
+
+    protected string GetSource(string serviceMembers = "", string[]? usingDirectives = null)
     {
         var usingSource = string.Join("\r\n", usingDirectives ?? Array.Empty<string>());
 

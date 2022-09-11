@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.Text.RegularExpressions;
-using AutoDependencies.Generator.Constants;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -26,11 +25,12 @@ public static class AttributeSyntaxFactory
             .WithAttributeLists(
                 List(new[]
                 {
-                    GetOrCreateAttributeListSyntax(GeneratorConstants.AttributeNames.GeneratedAttribute),
+                    GetOrCreateAttributeListSyntax(AttributeNames.GeneratedAttribute),
                     attributeUsageAttributeList
                 }));
 
-        var namespaceDeclaration = NamespaceSyntaxFactory.CreateNamespace(namespaceName, new[] { attributeClassDeclaration });
+        var namespaceDeclaration = NamespaceDeclaration(IdentifierName(namespaceName))
+            .WithMembers(List(new MemberDeclarationSyntax[] { attributeClassDeclaration }));
 
         var root = CompilationUnit()
             .WithMembers(List(new MemberDeclarationSyntax[]

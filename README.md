@@ -10,7 +10,7 @@ AutoDependencies is a library designed to get rid of boilerplate code in ASP.NET
 - [x] Generate code with Incremental Generatort
 - [x] Create and publish nuget packages
 - [x] Cover generator with tests 
-- [ ] Generate method that registers all generated services to the `IServiceCollection`
+- [x] Generate method that registers all generated services to the `IServiceCollection`
 - [ ] Add code analyzer with code fix
 - [ ] Cover analyzer with tests
 - [ ] Generate an interface for the service depending on a flag (i.e. supress interface generation)
@@ -37,7 +37,7 @@ This adds a `<PackageReference>` to your project. You can additionally mark the 
   </PropertyGroup>
 
   <!-- Add the package -->
-  <PackageReference Include="AutoDependencies.Generator" Version="0.1.2" PrivateAssets="all"/>
+  <PackageReference Include="AutoDependencies.Generator" Version="..." PrivateAssets="all"/>
 
 </Project>
 ```
@@ -82,18 +82,43 @@ using AutoDependencies.Attributes;
 namespace BestServiceEver 
 {
     [Generated]
-    public partial class FirstService : IFirstService
+    public partial class SampleService : ISampleService
     {
-        public FirstService(BestServiceEver.Interfaces.IDependency dependency)
+        public SampleService(BestServiceEver.Interfaces.IDependency dependency)
         {
             _dependency = dependency;
         }
     }
+}
 
+namespace BestServiceEver.Interfaces.Generated
+{
     [Generated]
-    public interface IFirstService
+    public interface ISampleService
     {
         void DoWork();
+    }
+}
+```
+
+In addition to the above, one more class will be generated. This class will contain an extension method for the [IServiceCollection](https://docs.microsoft.com/ru-ru/dotnet/api/microsoft.extensions.dependencyinjection.iservicecollection?view=dotnet-plat-ext-6.0) that will register all generated services in the dependency injection container.
+
+```csharp
+using AutoDependencies.Services;
+using AutoDependencies.Attributes;
+using Microsoft.Extensions.DependencyInjection;
+using AutoDependencies.Services.Interfaces.Generated;
+
+namespace AutoDependencies.Services.Extensions.Generated
+{
+    [Generated]
+    public static class BestServiceEverServiceCollectionExtensions
+    {
+        public static IServiceCollection RegisterServicesFormBestServiceEver(this IServiceCollection services, ServiceLifetime lifetime)
+        {
+            services.Add(new ServiceDescriptor(typeof(IFirstService), typeof(FirstService), lifetime));
+            return services;
+        }
     }
 }
 ```

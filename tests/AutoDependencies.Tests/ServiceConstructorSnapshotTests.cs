@@ -16,7 +16,7 @@ public class ServiceConstructorSnapshotTests : SnapshotTestsBase<ServiceGenerato
 
         var source = GetSource(members, usingDirectives);
 
-        return Verify(source, new[] { TestData.ExternalService });
+        return VerifyService(source, new[] { TestData.ExternalService });
     }
 
     [Theory]
@@ -42,7 +42,7 @@ public class ServiceConstructorSnapshotTests : SnapshotTestsBase<ServiceGenerato
 
         var source = GetSource(members, usingDirectives);
 
-        return Verify(source, new[] { TestData.ExternalService }).UseParameters(type.Replace("?", "null"));
+        return VerifyService(source, new[] { TestData.ExternalService }).UseParameters(type.Replace("?", "null"));
     }
 
     [Fact]
@@ -59,7 +59,7 @@ public class ServiceConstructorSnapshotTests : SnapshotTestsBase<ServiceGenerato
 
         var source = GetSource(members, usingDirectives);
 
-        return Verify(source, new[] { TestData.ExternalService });
+        return VerifyService(source, new[] { TestData.ExternalService });
     }
 
     [Fact]
@@ -73,7 +73,7 @@ public class ServiceConstructorSnapshotTests : SnapshotTestsBase<ServiceGenerato
 
         var source = GetSource(members, usingDirectives);
 
-        return Verify(source, new[] { TestData.ExternalService });
+        return VerifyService(source, new[] { TestData.ExternalService });
     }
 
     [Fact]
@@ -84,6 +84,6 @@ public class ServiceConstructorSnapshotTests : SnapshotTestsBase<ServiceGenerato
 
         var source = GetSource(members, usingDirectives);
 
-        return Verify(source, new[] { TestData.SecondServiceWithServiceAttribute });
+        return VerifyService(source, new[] { TestData.SecondServiceWithServiceAttribute });
     }
 }

@@ -1,5 +1,4 @@
-﻿using AutoDependencies.Generator.Constants;
-using AutoDependencies.Generator.Models;
+﻿using AutoDependencies.Generator.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -7,40 +6,51 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace AutoDependencies.Generator.SyntaxFactories;
 public static class ServiceSyntaxFactory
 {
-    public static SyntaxNode GenerateService(ServiceToGenerateInfo serviceToGenerateInfo)
+    public static SyntaxNode GenerateServiceSyntax(ServiceToGenerateInfo serviceToGenerateInfo)
     {
-        var (serviceInfo, interfaceInfo, constructorMembersInfo, nullableEnabled) = serviceToGenerateInfo;
+        var namespaceWithInterface = CreateNamespaceWithInterface(serviceToGenerateInfo.InterfaceInfo);
+        var namespaceWithService = CreateNamespaceWithService(serviceToGenerateInfo);
+        
+        var root = CompilationUnit()
+            .WithMembers(List(new MemberDeclarationSyntax[]
+            {
+                namespaceWithService,
+                namespaceWithInterface
+            }))
+            .WithUsings(UsingSyntaxFactory.CreateUsingDirectiveListSyntax(new[]
+            {
+                PredefinedNamespaces.AttributesNamespace,
+                serviceToGenerateInfo.InterfaceInfo.NamespaceName
+            }));
 
-        var interfaceDeclaration = InterfaceSyntaxFactory.CreateInterfaceDeclarationSyntax(serviceInfo.InterfaceName, interfaceInfo.InterfaceMembers);
-        var constructorDeclarationSyntax = ConstructorSyntaxFactory.CreateConstructor(serviceInfo, constructorMembersInfo);
+        return root.NormalizeWhitespace();
+    }
 
-        var classDeclaration = ClassSyntaxFactory.GeneratePartialClassService(serviceInfo, constructorDeclarationSyntax);
+    private static NamespaceDeclarationSyntax CreateNamespaceWithInterface(InterfaceInfo interfaceInfo)
+    {
+        var interfaceDeclaration = InterfaceSyntaxFactory.CreateInterfaceDeclarationSyntax(
+            IdentifierName(interfaceInfo.InterfaceName), 
+            interfaceInfo.InterfaceMembers);
+        
+        return NamespaceDeclaration(IdentifierName(interfaceInfo.NamespaceName))
+            .WithMembers(List(new MemberDeclarationSyntax[] { interfaceDeclaration }));
+    }
 
-        var serviceNamespaceDeclaration = NamespaceSyntaxFactory.CreateNamespace(
-            serviceInfo.Namespace,
-            new MemberDeclarationSyntax[] { classDeclaration });
+    private static NamespaceDeclarationSyntax CreateNamespaceWithService(ServiceToGenerateInfo serviceToGenerateInfo)
+    {
+        var (serviceInfo, interfaceInfo, constructorMemberInfos, nullableEnabled) = serviceToGenerateInfo;
 
-        var interfaceNamespaceDeclaration = NamespaceSyntaxFactory.CreateNamespace(
-            interfaceInfo.NamespaceName,
-            new[] { interfaceDeclaration });
+        var constructorDeclarationSyntax = ConstructorSyntaxFactory.CreateConstructorSyntax(serviceInfo, constructorMemberInfos);
+        var classDeclaration = ClassSyntaxFactory.GeneratePartialClassServiceSyntax(serviceInfo, interfaceInfo, constructorDeclarationSyntax);
+
+        var serviceNamespaceDeclaration = NamespaceDeclaration(IdentifierName(serviceInfo.NamespaceName))
+            .WithMembers(List(new MemberDeclarationSyntax[] { classDeclaration }));
 
         if (nullableEnabled)
         {
             serviceNamespaceDeclaration = serviceNamespaceDeclaration.WithLeadingTrivia(Trivia(NullableDirectiveTrivia(Token(SyntaxKind.EnableKeyword), true)));
         }
 
-        var root = CompilationUnit()
-            .WithMembers(List(new MemberDeclarationSyntax[]
-            {
-                serviceNamespaceDeclaration,
-                interfaceNamespaceDeclaration
-            }))
-            .WithUsings(UsingSyntaxFactory.CreateUsingDirectiveList(new[]
-            {
-                GeneratorConstants.PredefinedNamespaces.AttributesNamespace,
-                interfaceInfo.NamespaceName
-            }));
-
-        return root.NormalizeWhitespace();
+        return serviceNamespaceDeclaration;
     }
 }

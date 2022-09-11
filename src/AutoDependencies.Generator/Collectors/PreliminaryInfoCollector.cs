@@ -1,8 +1,7 @@
-﻿using AutoDependencies.Generator.Constants;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.CSharp;
+﻿using AutoDependencies.Generator.Extensions;
 using Microsoft.CodeAnalysis;
-using AutoDependencies.Generator.Extensions;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AutoDependencies.Generator.Collectors;
 
@@ -33,6 +32,6 @@ internal static class PreliminaryInfoCollector
             return false;
         }
 
-        return node.HasAttribute(GeneratorConstants.AttributeNames.ServiceAttribute, semanticModel, cancellationToken);
+        return node.HasAttribute(AttributeNames.ServiceAttribute, semanticModel, cancellationToken);
     }
 }
