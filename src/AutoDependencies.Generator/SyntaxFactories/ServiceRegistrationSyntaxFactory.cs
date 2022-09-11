@@ -1,34 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
-using AutoDependencies.Generator.Models;
-using Microsoft.CodeAnalysis;
+﻿using AutoDependencies.Generator.Models;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AutoDependencies.Generator.SyntaxFactories;
 public static class ServiceRegistrationSyntaxFactory
 {
+    private static readonly IdentifierNameSyntax AddMethodIdentifier = IdentifierName("Add");
+    private static readonly ObjectCreationExpressionSyntax ServiceDescriptorCreationSyntax =
+        ObjectCreationExpression(IdentifierName("ServiceDescriptor"));
+
     public static StatementSyntax CreateServiceRegistrationCallSyntax(
         ServiceInfo serviceInfo,
-        SyntaxToken servicesIdentifier,
-        SyntaxToken lifetimeIdentifier)
+        InterfaceInfo interfaceInfo,
+        IdentifierNameSyntax servicesIdentifier,
+        IdentifierNameSyntax lifetimeIdentifier)
     {
         var methodAccessExpressionSyntax = MemberAccessExpression(
             SyntaxKind.SimpleMemberAccessExpression,
-            IdentifierName(servicesIdentifier),
-            IdentifierName("Add"));
+            servicesIdentifier,
+            AddMethodIdentifier);
 
         var argumentListSyntax = ArgumentList(
             SeparatedList(new[]
             {
-                Argument(TypeOfExpression(IdentifierName(serviceInfo.InterfaceName))),
+                Argument(TypeOfExpression(IdentifierName(interfaceInfo.InterfaceName))),
                 Argument(TypeOfExpression(IdentifierName(serviceInfo.ServiceName))),
-                Argument(IdentifierName(lifetimeIdentifier))
+                Argument(lifetimeIdentifier)
             }));
 
-        var createServiceDescriptorExpression = ObjectCreationExpression(IdentifierName("ServiceDescriptor"))
+        var createServiceDescriptorExpression = ServiceDescriptorCreationSyntax
             .WithArgumentList(argumentListSyntax);
 
         var methodCallSyntax = InvocationExpression(methodAccessExpressionSyntax, ArgumentList(

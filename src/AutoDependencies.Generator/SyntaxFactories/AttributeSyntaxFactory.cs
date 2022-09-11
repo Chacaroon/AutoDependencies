@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.Text.RegularExpressions;
-using AutoDependencies.Generator.Constants;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -26,7 +25,7 @@ public static class AttributeSyntaxFactory
             .WithAttributeLists(
                 List(new[]
                 {
-                    GetOrCreateAttributeListSyntax(GeneratorConstants.AttributeNames.GeneratedAttribute),
+                    GetOrCreateAttributeListSyntax(AttributeNames.GeneratedAttribute),
                     attributeUsageAttributeList
                 }));
 

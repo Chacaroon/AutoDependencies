@@ -1,6 +1,4 @@
-﻿using AutoDependencies.Generator.Constants;
-using AutoDependencies.Generator.Models;
-using Microsoft.CodeAnalysis.CSharp;
+﻿using AutoDependencies.Generator.Models;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AutoDependencies.Generator.SyntaxFactories;
@@ -8,18 +6,18 @@ internal static class ClassSyntaxFactory
 {
     public static ClassDeclarationSyntax GeneratePartialClassServiceSyntax(
         ServiceInfo serviceInfo,
+        InterfaceInfo interfaceInfo,
         ConstructorDeclarationSyntax constructor)
     {
-        var interfaceIdentifier = IdentifierName(serviceInfo.InterfaceName);
         var interfaceList = BaseList(SeparatedList(new BaseTypeSyntax[]
         {
-            SimpleBaseType(interfaceIdentifier)
+            SimpleBaseType(IdentifierName(interfaceInfo.InterfaceName))
         }));
         
         var classDeclaration = ClassDeclaration(serviceInfo.ServiceName)
             .WithAttributeLists(List(new[]
             {
-                AttributeSyntaxFactory.GetOrCreateAttributeListSyntax(GeneratorConstants.AttributeNames.GeneratedAttribute)
+                AttributeSyntaxFactory.GetOrCreateAttributeListSyntax(AttributeNames.GeneratedAttribute)
             }))
             .WithModifiers(serviceInfo.Modifiers)
             .WithBaseList(interfaceList)

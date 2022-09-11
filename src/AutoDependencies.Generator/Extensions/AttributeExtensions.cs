@@ -1,5 +1,4 @@
-﻿using AutoDependencies.Generator.Constants;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AutoDependencies.Generator.Extensions;
@@ -39,8 +38,8 @@ internal static class AttributeExtensions
 
     public static string ToAttributeFullName(this string attributeName)
     {
-        return !attributeName.StartsWith(GeneratorConstants.PredefinedNamespaces.AttributesNamespace) 
-            ? $"{GeneratorConstants.PredefinedNamespaces.AttributesNamespace}.{attributeName}" 
+        return !attributeName.StartsWith(PredefinedNamespaces.AttributesNamespace) 
+            ? $"{PredefinedNamespaces.AttributesNamespace}.{attributeName}" 
             : attributeName;
     }
 }

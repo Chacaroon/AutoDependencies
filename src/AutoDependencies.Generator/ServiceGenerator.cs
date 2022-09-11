@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Text;
 using AutoDependencies.Generator.Collectors;
 using AutoDependencies.Generator.Constants;
@@ -51,7 +50,7 @@ public class ServiceGenerator : IIncrementalGenerator
 
         if (extensionsDeclaration != null)
         {
-            context.AddSource("ServiceCollectionExtensions".ToGeneratedFileName(), extensionsDeclaration.GetText(Encoding.UTF8));
+            context.AddSource(PredefinedClassNames.ServiceCollectionExtensions.ToGeneratedFileName(), extensionsDeclaration.GetText(Encoding.UTF8));
         }
 
         foreach (var serviceInfo in classesToGenerate)

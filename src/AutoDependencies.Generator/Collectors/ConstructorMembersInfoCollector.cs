@@ -1,9 +1,8 @@
-﻿using AutoDependencies.Generator.Constants;
+﻿using AutoDependencies.Generator.Extensions;
 using AutoDependencies.Generator.Models;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
-using AutoDependencies.Generator.Extensions;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AutoDependencies.Generator.Collectors;
 internal static class ConstructorMembersInfoCollector
@@ -12,7 +11,7 @@ internal static class ConstructorMembersInfoCollector
     {
         var memberDeclarations = classDeclarationSyntax.DescendantNodes()
             .OfType<MemberDeclarationSyntax>()
-            .Where(memberDeclarationSyntax => CanBeConstructorMember(memberDeclarationSyntax, semanticModel))
+            .Where(x => CanBeConstructorMember(x, semanticModel))
             .Select(x => CreateConstructorMemberInfo(x, semanticModel))
             .Where(x => x != null)
             .ToArray();
@@ -43,7 +42,7 @@ internal static class ConstructorMembersInfoCollector
         };
 
         return !hasInitializer 
-               && memberDeclarationSyntax.HasAttribute(GeneratorConstants.AttributeNames.InjectAttribute, semanticModel);
+               && memberDeclarationSyntax.HasAttribute(AttributeNames.InjectAttribute, semanticModel);
     }
 
     private static ConstructorMemberInfo CreateConstructorMemberInfo(
