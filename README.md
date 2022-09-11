@@ -104,12 +104,12 @@ namespace BestServiceEver.Interfaces.Generated
 In addition to the above, one more class will be generated. This class will contain an extension method for the [IServiceCollection](https://docs.microsoft.com/ru-ru/dotnet/api/microsoft.extensions.dependencyinjection.iservicecollection?view=dotnet-plat-ext-6.0) that will register all generated services in the dependency injection container.
 
 ```csharp
-using AutoDependencies.Services;
+using BestServiceEver;
 using AutoDependencies.Attributes;
 using Microsoft.Extensions.DependencyInjection;
-using AutoDependencies.Services.Interfaces.Generated;
+using BestServiceEver.Interfaces.Generated;
 
-namespace AutoDependencies.Services.Extensions.Generated
+namespace BestServiceEver.Extensions.Generated
 {
     [Generated]
     public static class BestServiceEverServiceCollectionExtensions
