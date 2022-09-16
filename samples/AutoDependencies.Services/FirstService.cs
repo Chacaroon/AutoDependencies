@@ -1,5 +1,4 @@
 ﻿using AutoDependencies.Attributes;
-using AutoDependencies.Services.External.Interfaces.Generated;
 using AutoDependencies.Services.Interfaces.Generated;
 using System;
 
@@ -9,7 +8,6 @@ namespace AutoDependencies.Services;
 internal partial class FirstService
 {
     private readonly ISecondService _secondService;
-    private readonly IExternalService _externalService;
 
     [ServiceConstructor]
     private FirstService(IThirdService thirdService) : this(thirdService.GetString())
@@ -25,6 +23,5 @@ internal partial class FirstService
     public void ConsoleDataFromInjectedServices()
     {
         Console.WriteLine(_secondService.GetString());
-        Console.WriteLine(_externalService.GetString());
     }
 }
