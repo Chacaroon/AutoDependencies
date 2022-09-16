@@ -6,7 +6,7 @@ namespace AutoDependencies.Services
     [Generated]
     internal partial class TestService : ITestService
     {
-        public TestService(ExternalLib.Services.IExternalService externalService1, ExternalLib.Services.IExternalService externalService2, ExternalLib.Services.IExternalService externalService3)
+        public TestService(ExternalLib.Services.IExternalService externalService1)
         {
             _externalService1 = externalService1;
             ExternalService2 = externalService2;

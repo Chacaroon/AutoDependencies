@@ -38,9 +38,9 @@ public static class ServiceSyntaxFactory
 
     private static NamespaceDeclarationSyntax CreateNamespaceWithService(ServiceToGenerateInfo serviceToGenerateInfo)
     {
-        var (serviceInfo, interfaceInfo, constructorMemberInfos, nullableEnabled) = serviceToGenerateInfo;
+        var (serviceInfo, interfaceInfo, constructorInfo, nullableEnabled) = serviceToGenerateInfo;
 
-        var constructorDeclarationSyntax = ConstructorSyntaxFactory.CreateConstructorSyntax(serviceInfo, constructorMemberInfos);
+        var constructorDeclarationSyntax = ConstructorSyntaxFactory.CreateConstructorSyntax(serviceInfo, constructorInfo);
         var classDeclaration = ClassSyntaxFactory.GeneratePartialClassServiceSyntax(serviceInfo, interfaceInfo, constructorDeclarationSyntax);
 
         var serviceNamespaceDeclaration = NamespaceDeclaration(IdentifierName(serviceInfo.NamespaceName))

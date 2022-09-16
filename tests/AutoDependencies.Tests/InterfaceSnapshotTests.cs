@@ -5,14 +5,14 @@ using AutoDependencies.Tests.Helpers;
 namespace AutoDependencies.Tests;
 
 [UsesVerify]
-public class ServiceInterfaceSnapshotTests : SnapshotTestsBase<ServiceGenerator>
+public class InterfaceSnapshotTests : SnapshotTestsBase<ServiceGenerator>
 {
     [Fact]
     public Task PublicMethod_Void_GeneratesInterfaceMember()
     {
         var source = GetSource("public void TestMethod() {}");
 
-        return VerifyService(source);
+        return VerifyServiceAsync(source);
     }
 
     [Fact]
@@ -25,7 +25,7 @@ public class ServiceInterfaceSnapshotTests : SnapshotTestsBase<ServiceGenerator>
 
         var source = GetSource(members);
 
-        return VerifyService(source);
+        return VerifyServiceAsync(source);
     }
 
     [Fact]
@@ -36,7 +36,7 @@ public class ServiceInterfaceSnapshotTests : SnapshotTestsBase<ServiceGenerator>
 
         var source = GetSource(members);
 
-        return VerifyService(source);
+        return VerifyServiceAsync(source);
     }
 
     [Theory]
@@ -53,7 +53,7 @@ public class ServiceInterfaceSnapshotTests : SnapshotTestsBase<ServiceGenerator>
 
         var source = GetSource(members);
 
-        return VerifyService(source).UseParameters(modifier);
+        return VerifyServiceAsync(source).UseParameters(modifier);
     }
 
 
@@ -65,7 +65,7 @@ public class ServiceInterfaceSnapshotTests : SnapshotTestsBase<ServiceGenerator>
 
         var source = GetSource(members);
 
-        return VerifyService(source);
+        return VerifyServiceAsync(source);
     }
 
     [Fact]
@@ -77,6 +77,6 @@ public class ServiceInterfaceSnapshotTests : SnapshotTestsBase<ServiceGenerator>
 
         var source = GetSource(members, usingDirectives);
 
-        return VerifyService(source, new[] { TestData.ExternalService });
+        return VerifyServiceAsync(source, new[] { TestData.ExternalService });
     }
 }

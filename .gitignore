@@ -364,3 +364,4 @@ FodyWeavers.xsd
 
 # Generated files
 *.g.cs
+.idea

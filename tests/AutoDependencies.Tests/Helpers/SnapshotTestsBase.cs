@@ -14,7 +14,7 @@ internal partial class TestService {
     {members}
 }";
 
-    protected SettingsTask VerifyService(string source, string[]? additionalSources = null, NullableContextOptions nullableContextOptions = NullableContextOptions.Disable)
+    protected SettingsTask VerifyServiceAsync(string source, string[]? additionalSources = null, NullableContextOptions nullableContextOptions = NullableContextOptions.Disable)
     {
         var (output, diagnostics, _) = TestHelper.GetGeneratedOutput<TGenerator>(source, additionalSources, nullableContextOptions);
 

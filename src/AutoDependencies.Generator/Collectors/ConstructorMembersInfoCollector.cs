@@ -7,16 +7,19 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace AutoDependencies.Generator.Collectors;
 internal static class ConstructorMembersInfoCollector
 {
-    public static ConstructorMemberInfo[] GetConstructorMembersInfo(ClassDeclarationSyntax classDeclarationSyntax, SemanticModel semanticModel)
+    public static ConstructorInfo GetConstructorMembersInfo(ClassDeclarationSyntax classDeclarationSyntax, SemanticModel semanticModel)
     {
-        var memberDeclarations = classDeclarationSyntax.DescendantNodes()
+        var constructorMembers = classDeclarationSyntax.DescendantNodes()
             .OfType<MemberDeclarationSyntax>()
             .Where(x => CanBeConstructorMember(x, semanticModel))
             .Select(x => CreateConstructorMemberInfo(x, semanticModel))
             .Where(x => x != null)
             .ToArray();
-        
-        return memberDeclarations;
+
+        var externalConstructorMembers = ExternalConstructorInfoCollector
+            .ExternalConstructorInfo(classDeclarationSyntax, semanticModel);
+
+        return new(constructorMembers, externalConstructorMembers);
     }
 
     private static bool CanBeConstructorMember(
