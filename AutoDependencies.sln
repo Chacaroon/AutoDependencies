@@ -29,6 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.cspr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoDependencies.Services.External", "samples\AutoDependencies.Services.External\AutoDependencies.Services.External.csproj", "{B09EAB07-44BA-445F-8057-788391C29617}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoDependencies.NugetIntegrationTests", "tests\AutoDependencies.NugetIntegrationTests\AutoDependencies.NugetIntegrationTests.csproj", "{52E8AE32-60C8-47E1-BE27-F163F1EA595E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{B09EAB07-44BA-445F-8057-788391C29617}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B09EAB07-44BA-445F-8057-788391C29617}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B09EAB07-44BA-445F-8057-788391C29617}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52E8AE32-60C8-47E1-BE27-F163F1EA595E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52E8AE32-60C8-47E1-BE27-F163F1EA595E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52E8AE32-60C8-47E1-BE27-F163F1EA595E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52E8AE32-60C8-47E1-BE27-F163F1EA595E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,6 +78,7 @@ Global
 		{6E3C45B5-CE1C-4D80-A425-586022A79ACB} = {232363A4-A072-49B1-9505-2C211AFA5EDC}
 		{66A9DE0F-6CB5-4850-BA1F-68147EE134AB} = {232363A4-A072-49B1-9505-2C211AFA5EDC}
 		{B09EAB07-44BA-445F-8057-788391C29617} = {FCA61306-9605-4555-B06A-F4212E2FD5D4}
+		{52E8AE32-60C8-47E1-BE27-F163F1EA595E} = {232363A4-A072-49B1-9505-2C211AFA5EDC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE1D2266-0E15-423C-8F42-FC35A8FE86B5}
