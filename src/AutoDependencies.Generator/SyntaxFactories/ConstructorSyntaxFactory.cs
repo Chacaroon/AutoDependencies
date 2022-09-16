@@ -4,21 +4,35 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AutoDependencies.Generator.SyntaxFactories;
-internal class ConstructorSyntaxFactory
+
+internal static class ConstructorSyntaxFactory
 {
     private static readonly Regex UnderscoreRegex = new("^_", RegexOptions.Compiled);
 
     public static ConstructorDeclarationSyntax CreateConstructorSyntax(
         ServiceInfo serviceInfo,
-        ConstructorMemberInfo[] constructorMembersInfo)
+        ConstructorInfo constructorInfo)
     {
-        var parameters = CreateConstructorParametersSyntax(constructorMembersInfo);
-        var body = Block(CreateAssignmentStatementsSyntax(constructorMembersInfo));
+        var (constructorMembers, customConstructorMembers) = constructorInfo;
+        var constructorParameters = constructorMembers
+            .Concat(customConstructorMembers)
+            .Distinct()
+            .ToArray();
+        var parameters = CreateConstructorParametersSyntax(constructorParameters);
+        var body = Block(CreateAssignmentStatementsSyntax(constructorMembers));
 
         var constructorDeclaration = ConstructorDeclaration(serviceInfo.ServiceName)
             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
             .WithParameterList(parameters)
             .WithBody(body);
+
+        if (constructorInfo.HasExternalConstructor)
+        {
+            constructorDeclaration = constructorDeclaration.WithInitializer(
+                ConstructorInitializer(
+                    SyntaxKind.ThisConstructorInitializer,
+                    CreateCustomConstructorArgumentsSyntax(customConstructorMembers)));
+        }
 
         return constructorDeclaration;
     }
@@ -35,9 +49,18 @@ internal class ConstructorSyntaxFactory
             .Select(x => Parameter(Identifier(x.Name))
                 .WithType(x.Type))
             .ToArray();
-        
 
         return ParameterList(SeparatedList(parameters));
+    }
+
+    private static ArgumentListSyntax CreateCustomConstructorArgumentsSyntax(
+        ConstructorMemberInfo[] constructorMemberInfos)
+    {
+        var arguments = constructorMemberInfos
+            .Select(x => Argument(IdentifierName(NormalizeMemberName(x.Name))))
+            .ToArray();
+
+        return ArgumentList(SeparatedList(arguments));
     }
 
     private static StatementSyntax[] CreateAssignmentStatementsSyntax(ConstructorMemberInfo[] constructorMembersInfo)

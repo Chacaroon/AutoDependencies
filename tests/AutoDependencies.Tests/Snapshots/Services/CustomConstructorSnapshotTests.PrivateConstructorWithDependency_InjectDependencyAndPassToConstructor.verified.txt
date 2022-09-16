@@ -1,18 +1,21 @@
 ﻿using AutoDependencies.Attributes;
+using Tests.Interfaces.Generated;
 
 namespace AutoDependencies.Services
 {
     [Generated]
     internal partial class TestService : ITestService
     {
-        public TestService()
+        public TestService(ExternalLib.Services.IExternalService externalService) : this(externalService)
         {
         }
     }
+}
 
+namespace Tests.Interfaces.Generated
+{
     [Generated]
     public interface ITestService
     {
-        string? TestMethod();
     }
 }

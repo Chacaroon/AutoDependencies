@@ -4,7 +4,7 @@ using AutoDependencies.Tests.Helpers;
 namespace AutoDependencies.Tests;
 
 [UsesVerify]
-public class ServiceAttributeSnapshotTests : SnapshotTestsBase<ServiceGenerator>
+public class AttributeSnapshotTests : SnapshotTestsBase<ServiceGenerator>
 {
     [Fact]
     public Task PartialClassWithServiceAttribute_GeneratesPartialClassWithEmptyConstructorAndInterface()
@@ -17,7 +17,7 @@ namespace AutoDependencies.Services;
 [Service]
 internal partial class TestService {}";
 
-        return VerifyService(source);
+        return VerifyServiceAsync(source);
     }
 
     [Fact]
@@ -30,7 +30,7 @@ namespace AutoDependencies.Services;
 
 internal partial class TestService {}";
 
-        return VerifyService(source);
+        return VerifyServiceAsync(source);
     }
 
     [Fact]
@@ -44,6 +44,6 @@ namespace AutoDependencies.Services;
 [Service]
 internal class TestService {}";
 
-        return VerifyService(source);
+        return VerifyServiceAsync(source);
     }
 }

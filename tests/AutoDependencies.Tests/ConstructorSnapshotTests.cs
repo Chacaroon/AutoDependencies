@@ -6,7 +6,7 @@ using AutoDependencies.Tests.Helpers;
 namespace AutoDependencies.Tests;
 
 [UsesVerify]
-public class ServiceConstructorSnapshotTests : SnapshotTestsBase<ServiceGenerator>
+public class ConstructorSnapshotTests : SnapshotTestsBase<ServiceGenerator>
 {
     [Fact]
     public Task PrivateReadonlyField_GeneratesConstructorWithOneParameterAndAssignProperty()
@@ -16,7 +16,7 @@ public class ServiceConstructorSnapshotTests : SnapshotTestsBase<ServiceGenerato
 
         var source = GetSource(members, usingDirectives);
 
-        return VerifyService(source, new[] { TestData.ExternalService });
+        return VerifyServiceAsync(source, new[] { TestData.ExternalService });
     }
 
     [Theory]
@@ -42,7 +42,7 @@ public class ServiceConstructorSnapshotTests : SnapshotTestsBase<ServiceGenerato
 
         var source = GetSource(members, usingDirectives);
 
-        return VerifyService(source, new[] { TestData.ExternalService }).UseParameters(type.Replace("?", "null"));
+        return VerifyServiceAsync(source, new[] { TestData.ExternalService }).UseParameters(type.Replace("?", "null"));
     }
 
     [Fact]
@@ -59,7 +59,7 @@ public class ServiceConstructorSnapshotTests : SnapshotTestsBase<ServiceGenerato
 
         var source = GetSource(members, usingDirectives);
 
-        return VerifyService(source, new[] { TestData.ExternalService });
+        return VerifyServiceAsync(source, new[] { TestData.ExternalService });
     }
 
     [Fact]
@@ -73,7 +73,7 @@ public class ServiceConstructorSnapshotTests : SnapshotTestsBase<ServiceGenerato
 
         var source = GetSource(members, usingDirectives);
 
-        return VerifyService(source, new[] { TestData.ExternalService });
+        return VerifyServiceAsync(source, new[] { TestData.ExternalService });
     }
 
     [Fact]
@@ -84,6 +84,6 @@ public class ServiceConstructorSnapshotTests : SnapshotTestsBase<ServiceGenerato
 
         var source = GetSource(members, usingDirectives);
 
-        return VerifyService(source, new[] { TestData.SecondServiceWithServiceAttribute });
+        return VerifyServiceAsync(source, new[] { TestData.SecondServiceWithServiceAttribute });
     }
 }

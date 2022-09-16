@@ -8,8 +8,8 @@ public static class DefaultAttributes
     private static readonly (string Name, AttributeTargets[] Targets)[] DefaultAttributeNames = {
         (AttributeNames.GeneratedAttribute, new[] { AttributeTargets.Interface, AttributeTargets.Class }),
         (AttributeNames.InjectAttribute, new[] { AttributeTargets.Property, AttributeTargets.Field}),
-        (AttributeNames.ServiceAttribute, new[] { AttributeTargets.Class })
-
+        (AttributeNames.ServiceAttribute, new[] { AttributeTargets.Class }),
+        (AttributeNames.ServiceConstructorAttribute, new [] { AttributeTargets.Constructor })
     };
     private static readonly ConcurrentDictionary<string, SyntaxNode> AttributeDeclarations = new();
 
