@@ -62,4 +62,43 @@ public class ExternalConstructorSnapshotTests : SnapshotTestsBase<ServiceGenerat
 
         return VerifyServiceAsync(source, new[] { TestData.ExternalService });
     }
+    
+    [Fact]
+    public Task TwoPrivateConstructors_ExternalConstructorCallDoesNotGenerated()
+    {
+        var usingDirectives = new[]
+        {
+            "using AutoDependencies.Attributes;",
+            "using ExternalLib.Services;"
+        };
+
+        var members = @"
+    private TestService(IExternalService externalService) {}
+
+    private TestService(string str) {}";
+
+        var source = GetSource(members, usingDirectives);
+
+        return VerifyServiceAsync(source, new[] { TestData.ExternalService });
+    }
+    
+    [Fact]
+    public Task TwoPrivateConstructorsAndServiceConstructorAttribute_ExternalConstructorCallGenerated()
+    {
+        var usingDirectives = new[]
+        {
+            "using AutoDependencies.Attributes;",
+            "using ExternalLib.Services;"
+        };
+
+        var members = @"
+    [ServiceConstructor]
+    private TestService(IExternalService externalService) {}
+
+    private TestService(string str) {}";
+
+        var source = GetSource(members, usingDirectives);
+
+        return VerifyServiceAsync(source, new[] { TestData.ExternalService });
+    }
 }

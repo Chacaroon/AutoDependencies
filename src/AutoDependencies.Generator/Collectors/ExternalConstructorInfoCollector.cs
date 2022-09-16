@@ -7,23 +7,29 @@ namespace AutoDependencies.Generator.Collectors;
 
 public static class ExternalConstructorInfoCollector
 {
-    public static ConstructorMemberInfo[] ExternalConstructorInfo(ClassDeclarationSyntax classDeclarationSyntax, SemanticModel semanticModel)
+    public static ConstructorMemberInfo[] ExternalConstructorInfo(
+        ClassDeclarationSyntax classDeclarationSyntax,
+        SemanticModel semanticModel)
     {
-        var constructor = classDeclarationSyntax
+        var constructors = classDeclarationSyntax
             .DescendantNodes()
             .OfType<ConstructorDeclarationSyntax>()
-            .FirstOrDefault();
+            .ToArray();
 
-        if (constructor == null)
+        var constructor = constructors switch
         {
-            return Array.Empty<ConstructorMemberInfo>();
-        }
+            { Length: 1 } => constructors[0],
+            { Length: > 1} => constructors.FirstOrDefault(x =>
+                x.HasAttribute(AttributeNames.ServiceConstructorAttribute, semanticModel)),
+            _ => null
+        };
 
-        return constructor
+        return constructor?
             .ParameterList
             .Parameters
             .Where(x => x.Type != null)
             .Select(x => new ConstructorMemberInfo(x.Identifier.Text, x.Type!.ToFullNameTypeSyntax(semanticModel)))
-            .ToArray();
-    } 
+            .ToArray()
+            ?? Array.Empty<ConstructorMemberInfo>();
+    }
 }
