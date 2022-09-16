@@ -2,7 +2,7 @@
 
 public record ConstructorInfo(
     ConstructorMemberInfo[] ConstructorMembers,
-    ConstructorMemberInfo[] ExternalConstructorMembers)
+    ConstructorMemberInfo[] CustomConstructorMembers)
 {
-    public bool HasExternalConstructor => ExternalConstructorMembers.Any();
+    public bool HasExternalConstructor => CustomConstructorMembers.Any();
 }

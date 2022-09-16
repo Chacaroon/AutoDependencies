@@ -5,7 +5,7 @@ using AutoDependencies.Tests.Helpers;
 namespace AutoDependencies.Tests;
 
 [UsesVerify]
-public class ExternalConstructorSnapshotTests : SnapshotTestsBase<ServiceGenerator>
+public class CustomConstructorSnapshotTests : SnapshotTestsBase<ServiceGenerator>
 {
     [Fact]
     public Task PrivateConstructorWithDependency_InjectDependencyAndPassToConstructor()

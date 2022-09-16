@@ -16,10 +16,10 @@ internal static class ConstructorMembersInfoCollector
             .Where(x => x != null)
             .ToArray();
 
-        var externalConstructorMembers = ExternalConstructorInfoCollector
-            .ExternalConstructorInfo(classDeclarationSyntax, semanticModel);
+        var customConstructorMembers = CustomConstructorInfoCollector
+            .CustomConstructorInfo(classDeclarationSyntax, semanticModel);
 
-        return new(constructorMembers, externalConstructorMembers);
+        return new(constructorMembers, customConstructorMembers);
     }
 
     private static bool CanBeConstructorMember(

@@ -5,9 +5,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AutoDependencies.Generator.Collectors;
 
-public static class ExternalConstructorInfoCollector
+public static class CustomConstructorInfoCollector
 {
-    public static ConstructorMemberInfo[] ExternalConstructorInfo(
+    public static ConstructorMemberInfo[] CustomConstructorInfo(
         ClassDeclarationSyntax classDeclarationSyntax,
         SemanticModel semanticModel)
     {

@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AutoDependencies.Generator.SyntaxFactories;
+
 internal static class ConstructorSyntaxFactory
 {
     private static readonly Regex UnderscoreRegex = new("^_", RegexOptions.Compiled);
@@ -12,9 +13,9 @@ internal static class ConstructorSyntaxFactory
         ServiceInfo serviceInfo,
         ConstructorInfo constructorInfo)
     {
-        var (constructorMembers, externalConstructorMembers) = constructorInfo;
+        var (constructorMembers, customConstructorMembers) = constructorInfo;
         var constructorParameters = constructorMembers
-            .Concat(externalConstructorMembers)
+            .Concat(customConstructorMembers)
             .Distinct()
             .ToArray();
         var parameters = CreateConstructorParametersSyntax(constructorParameters);
@@ -28,7 +29,9 @@ internal static class ConstructorSyntaxFactory
         if (constructorInfo.HasExternalConstructor)
         {
             constructorDeclaration = constructorDeclaration.WithInitializer(
-                ConstructorInitializer(SyntaxKind.ThisConstructorInitializer, CreateExternalConstructorArgumentsSyntax(externalConstructorMembers)));
+                ConstructorInitializer(
+                    SyntaxKind.ThisConstructorInitializer,
+                    CreateCustomConstructorArgumentsSyntax(customConstructorMembers)));
         }
 
         return constructorDeclaration;
@@ -50,7 +53,8 @@ internal static class ConstructorSyntaxFactory
         return ParameterList(SeparatedList(parameters));
     }
 
-    private static ArgumentListSyntax CreateExternalConstructorArgumentsSyntax(ConstructorMemberInfo[] constructorMemberInfos)
+    private static ArgumentListSyntax CreateCustomConstructorArgumentsSyntax(
+        ConstructorMemberInfo[] constructorMemberInfos)
     {
         var arguments = constructorMemberInfos
             .Select(x => Argument(IdentifierName(NormalizeMemberName(x.Name))))
