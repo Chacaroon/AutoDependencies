@@ -7,7 +7,6 @@ using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Utilities.Collections;
-using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
 [ShutdownDotNetAfterServerBuild]
@@ -52,15 +51,13 @@ class Build : NukeBuild
         .Before(Restore)
         .Executes(() =>
         {
-            Logger.LogLevel = LogLevel.Trace;
-
-            SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
-            TestsDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+            SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(path => path.DeleteDirectory());
+            TestsDirectory.GlobDirectories("**/bin", "**/obj").ForEach(path => path.DeleteDirectory());
             if (!string.IsNullOrEmpty(PackagesDirectory))
             {
-                EnsureCleanDirectory(PackagesDirectory);
+                PackagesDirectory.CreateOrCleanDirectory();
             }
-            EnsureCleanDirectory(ArtifactsDirectory);
+            ArtifactsDirectory.CreateOrCleanDirectory();
         });
 
     Target Restore => _ => _
@@ -125,7 +122,7 @@ class Build : NukeBuild
 
             if (!string.IsNullOrEmpty(PackagesDirectory))
             {
-                DeleteDirectory(PackagesDirectory / "autodependencies.generator");
+                (PackagesDirectory / "autodependencies.generator").DeleteDirectory();
             }
 
             DotNetRestore(s => s
