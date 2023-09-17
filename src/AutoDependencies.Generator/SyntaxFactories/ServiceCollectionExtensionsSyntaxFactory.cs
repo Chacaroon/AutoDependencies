@@ -75,7 +75,7 @@ public static class ServiceCollectionExtensionsSyntaxFactory
 
         return MethodDeclaration(ServiceCollectionIdentifierSyntax, $"RegisterServicesForm{normalizedAssemblyName}")
             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
-            .WithParameterList(ParameterList(SeparatedList(new SyntaxNode[]
+            .WithParameterList(ParameterList(SeparatedList(new[]
             {
                 serviceParameter,
                 lifetimeScopeParameter

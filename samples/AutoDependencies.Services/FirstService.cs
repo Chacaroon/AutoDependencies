@@ -7,7 +7,7 @@ namespace AutoDependencies.Services;
 [Service]
 internal partial class FirstService
 {
-    private readonly ISecondService _secondService;
+    private readonly ISecondService _secondService = default!;
 
     [ServiceConstructor]
     private FirstService(IThirdService thirdService) : this(thirdService.GetString())
